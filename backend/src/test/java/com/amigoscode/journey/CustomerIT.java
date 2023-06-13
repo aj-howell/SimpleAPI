@@ -22,7 +22,7 @@ import com.github.javafaker.Name;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class CustomerIntegrationTest
+public class CustomerIT
 {
 	@Autowired
 	private WebTestClient webClient;

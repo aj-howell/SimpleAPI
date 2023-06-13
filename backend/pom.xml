@@ -7,9 +7,10 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.6</version>
+        <version>3.0.7</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>org.amigoscode</groupId>
     <artifactId>amigoscode-api</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -19,9 +20,10 @@
     </organization>
 
     <properties>
+		<tomcat.http.port>8080</tomcat.http.port>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <docker.username>ahowell2000</docker.username>
+        <docker.username>amigoscode</docker.username>
     </properties>
 
     <dependencies>
@@ -97,17 +99,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>pre-integration-test</id>
-                        <goals>
-                            <goal>start</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>
-                                <argument>--server.port=${tomcat.http.port}</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>post-integration-test</id>
                         <goals>
                             <goal>stop</goal>
@@ -175,7 +166,7 @@
                         </platforms>
                     </from>
                     <to>
-                        <image>docker.io/${project.organization.name}/${project.artifactId}:${project.version}</image>
+                        <image>docker.io/${organization.name}/${project.artifactId}:${project.version}</image>
                         <tags>
                             <tag>latest</tag>
                         </tags>
@@ -184,4 +175,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
