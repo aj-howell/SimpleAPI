@@ -17,6 +17,7 @@ import com.github.javafaker.Faker;
 @Testcontainers
 public abstract class AbstractTestcontainersUnitTest
 {
+	  static DataSource dataSource;
 	@BeforeAll
 	static void beforeAll() // connects flyway to container
 	{
@@ -41,16 +42,18 @@ public abstract class AbstractTestcontainersUnitTest
 		registry.add("spring.datasource.username", ()-> postgreSQLContainer.getUsername());
 	}
 	
-	private static DataSource getDataSource()
-	{
-		DataSourceBuilder builder = DataSourceBuilder.create()
-				.driverClassName(null)
-				.url(postgreSQLContainer.getJdbcUrl())
-				.username(postgreSQLContainer.getUsername())
-				.password(postgreSQLContainer.getPassword());
-		
-		return builder.build();
-	}
+	//singleton used or it will keep creating the datasource over and over causing too many clients
+	 private synchronized  static DataSource getDataSource() {
+	      
+			if (dataSource==null) {
+	            dataSource = DataSourceBuilder.create()
+	                    .url(postgreSQLContainer.getJdbcUrl())
+	                    .username(postgreSQLContainer.getUsername())
+	                    .password(postgreSQLContainer.getPassword())
+	                    .build();
+	        }
+	        return dataSource;
+	    } 
 	
 	public JdbcTemplate getJDBC()
 	{
