@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: amigoscode
       POSTGRES_PASSWORD: password
       PGDATA: /data/postgres
-    command: postgres -c 'max_connections=1000'
+    command: postgres -c 'max_connections=10000'
     volumes:
       - db:/data/postgres
     ports:
