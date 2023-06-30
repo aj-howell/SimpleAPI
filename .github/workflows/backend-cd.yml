@@ -53,7 +53,7 @@ jobs:
           cat ../Dockerrun.aws.json
           sed -i -E 's_(ahowell2000/amigoscode-api:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../backend/Dockerrun.aws.json
           echo "Dockerrun.aws.json after updating tag"
-          cat ../Dockerrun.aws.json
+          cat ../backend/Dockerrun.aws.json
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
