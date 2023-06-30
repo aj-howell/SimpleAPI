@@ -14,13 +14,17 @@
     <artifactId>amigoscode-api</artifactId>
     <version>1.0-SNAPSHOT</version>
     
+    <organization>
+        <name>ahowell2000</name>
+        <url>https://amigoscode.com</url>
+    </organization>
+    
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <docker.username>ahowell2000</docker.username>
         <docker.image.name>amigoscode-api</docker.image.name>
         <docker.image.tag/>
-        
     </properties>
 
     <dependencies>
@@ -164,7 +168,7 @@
                         </platforms>
                     </from>
                     <to>
-                        <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}}</image>
+                        <image>docker.io/${project.organization.name}/${project.artifactId}:${project.version}</image>
                         <tags>
                             <tag>latest</tag>
                         </tags>
