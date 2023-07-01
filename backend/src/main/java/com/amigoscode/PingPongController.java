@@ -12,7 +12,7 @@ public class PingPongController
 	@GetMapping("/ping")
 	public PingPong getPingPong()
 	{
-		System.out.println("PONGGGg");
+		System.out.println("PONGGGGG");
 		return new PingPong("HELLO");
 	}
 }
