@@ -44,8 +44,17 @@ jobs:
       - name: Set build number
         id: build-number
         run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
+      - name: Sending Slack Message
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":"Building with Maven"}' 
+          ${{ secrets.SLACK_WEBHOOK_URL }} 
       - name: Build Package Push with Maven
         run: mvn -ntp -B verify -D docker.image.tag=${{steps.build-number.outputs.BUILD_NUMBER}} jib:build
+      - name: Sending Slack Message
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":"Updating Dockerrun file with image tag: ${{steps.build-number.outputs.BUILD_NUMBER}}}'
       - name: Update Dockerrun.aws.json api image tag with new build number
         run: |
           echo "Dockerrun.aws.json before updating tag"
@@ -64,6 +73,10 @@ jobs:
           version_description: ${{ github.SHA }}
           region: ${{ secrets.EB_REGION }}
           deployment_package: backend/Dockerrun.aws.json
+      - name: Sending Slack Message
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":"Commit pushed to Github}'
       - name: Commit and push Dockerrun.aws.json
         run: |
           git config user.name github-actions
