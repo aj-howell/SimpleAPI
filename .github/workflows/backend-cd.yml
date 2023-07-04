@@ -55,6 +55,7 @@ jobs:
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":"Updating Dockerrun file with image tag: ${{steps.build-number.outputs.BUILD_NUMBER}}}'
+          ${{ secrets.SLACK_WEBHOOK_URL }} 
       - name: Update Dockerrun.aws.json api image tag with new build number
         run: |
           echo "Dockerrun.aws.json before updating tag"
@@ -77,6 +78,7 @@ jobs:
         run: >
           curl -X POST -H 'Content-type: application/json' 
           --data '{"text":"Commit pushed to Github}'
+          ${{ secrets.SLACK_WEBHOOK_URL }} 
       - name: Commit and push Dockerrun.aws.json
         run: |
           git config user.name github-actions
@@ -84,3 +86,8 @@ jobs:
           git add .
           git commit -m "Update Dockerrun.aws.json docker image with new tag ${{ steps.build-number.outputs.BUILD_NUMBER }}"
           git push
+      - name: Sending Slack Message
+        run: >
+          curl -X POST -H 'Content-type: application/json' 
+          --data '{"text":"Deployment Completed}'
+          ${{ secrets.SLACK_WEBHOOK_URL }} 
