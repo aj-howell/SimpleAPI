@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PingPongController 
 {
+	private static int count = 0;
+	
 	//PingPong class
 	record PingPong(String result){};
 	
@@ -13,6 +15,8 @@ public class PingPongController
 	public PingPong getPingPong()
 	{
 		System.out.println("PONG");
-		return new PingPong("HELLO");
+		count++;
+		return new PingPong("HELLO: "+count);
+		
 	}
 }
