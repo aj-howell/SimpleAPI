@@ -16,7 +16,7 @@ public class PingPongController
 	{
 		System.out.println("PONG");
 		count++;
-		return new PingPong("HELLO: "+count);
+		return new PingPong("HELLOO: "+count);
 		
 	}
 }
