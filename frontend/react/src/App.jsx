@@ -44,7 +44,7 @@ if(customers.length <= 0)
 {
 	return (
 		<SidebarWithHeader>
-			<Text>No customers available</Text>
+			<Text>No Customers available</Text>
 		</SidebarWithHeader>
 	);
 }
