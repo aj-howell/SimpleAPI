@@ -30,8 +30,6 @@ class CustomerRepositoryTest extends AbstractTestcontainersUnitTest
 	@Autowired
 	private ApplicationContext applicationContext;
 	
-	
-
 	@BeforeEach
 	void setUp() throws Exception
 	{
@@ -122,5 +120,4 @@ class CustomerRepositoryTest extends AbstractTestcontainersUnitTest
 //	void test() {
 //		fail("Not yet implemented");
 //	}
-
 }

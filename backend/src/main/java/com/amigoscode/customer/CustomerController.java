@@ -9,12 +9,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("api/v1/customers")
+
 public class CustomerController 
 /* a class that uses customerService which contains methods that will return queries 
  * that are then turned into JSON objects when mapped to the Web page */

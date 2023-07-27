@@ -1,7 +1,6 @@
 package com.amigoscode.customer;
 
 import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +13,7 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table
 (
-		name="customer",
+	name="customer",
 	uniqueConstraints=
 	{
 		@UniqueConstraint
