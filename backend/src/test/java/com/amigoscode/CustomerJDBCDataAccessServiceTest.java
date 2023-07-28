@@ -1,6 +1,8 @@
 package com.amigoscode;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,7 +33,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID()
+				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID(),
+				faker.demographic().sex()
 						);
 		
 		underTest.insertCustomer(customer);
@@ -58,7 +61,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				email
+				email,
+				faker.demographic().sex()
 						);
 		
 		underTest.insertCustomer(customer);
@@ -77,6 +81,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		assertThat(testCustomer).isPresent().hasValueSatisfying(c -> {
 			assertThat(c.getId().equals(id));
 			assertThat(c.getEmail().equals(email));
+			assertThat(c.getGender().equals(customer.getGender()));
 			assertThat(c.getName().equals(customer.getName()));
 			
 		});
@@ -90,7 +95,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				email
+				email,
+				faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -114,7 +120,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				email
+				email,
+				faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -140,8 +147,9 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				email
-						);
+				email,
+				faker.demographic().sex()
+				);
 		underTest.insertCustomer(customer);
 		
 		// an email that we've not put into the database yet
@@ -161,7 +169,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				email
+				email,
+				faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -194,7 +203,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				email
+				email,
+				faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -219,8 +229,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        Customer customer = new Customer(
 	        		20,
 	                faker.name().fullName(),
-	                email
-	                
+	                email,
+	                faker.demographic().sex()
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -248,6 +258,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	            assertThat(c.getId()).isEqualTo(id);
 	            assertThat(c.getName()).isEqualTo(newName); // change
 	            assertThat(c.getEmail()).isEqualTo(customer.getEmail());
+	            assertThat(c.getGender().equals(customer.getGender()));
 	            assertThat(c.getAge()).isEqualTo(customer.getAge());
 	        });
 	    }
@@ -260,8 +271,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        Customer customer = new Customer(
 	        		20,
 	                faker.name().fullName(),
-	                email
-	               
+	                email,
+	               faker.demographic().sex()
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -289,6 +300,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	            assertThat(c.getId()).isEqualTo(id);
 	            assertThat(c.getEmail()).isEqualTo(newEmail); // change
 	            assertThat(c.getName()).isEqualTo(customer.getName());
+	            assertThat(c.getGender().equals(customer.getGender()));
 	            assertThat(c.getAge()).isEqualTo(customer.getAge());
 	        });
 	    }
@@ -300,7 +312,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        Customer customer = new Customer(
 	        		 20,
 	                faker.name().fullName(),
-	                email
+	                email,
+	                faker.demographic().sex()
 	               
 	        );
 
@@ -329,6 +342,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	            assertThat(c.getId()).isEqualTo(id);
 	            assertThat(c.getAge()).isEqualTo(newAge); // change
 	            assertThat(c.getName()).isEqualTo(customer.getName());
+	            assertThat(c.getGender().equals(customer.getGender()));
 	            assertThat(c.getEmail()).isEqualTo(customer.getEmail());
 	        });
 	    }
@@ -337,10 +351,12 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	    void willUpdateAllPropertiesCustomer() {
 	        // Given
 	        String email = faker.internet().safeEmailAddress() + "-" + UUID.randomUUID();
+	        String gender = faker.demographic().sex();
 	        Customer customer = new Customer(
 	        		 20,
 	                faker.name().fullName(),
-	                email
+	                email,
+	                gender
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -358,6 +374,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        update.setName("foo");
 	        update.setEmail(UUID.randomUUID().toString());
 	        update.setAge(22);
+	        update.setGender(gender);
 
 	        underTest.updateCustomer(update);
 
@@ -374,8 +391,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        Customer customer = new Customer(
 	        		20,
 	                faker.name().fullName(),
-	                email
-	                
+	                email,
+	                faker.demographic().sex()
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -400,6 +417,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	            assertThat(c.getId()).isEqualTo(id);
 	            assertThat(c.getAge()).isEqualTo(customer.getAge());
 	            assertThat(c.getName()).isEqualTo(customer.getName());
+	            assertThat(c.getGender().equals(customer.getGender()));
 	            assertThat(c.getEmail()).isEqualTo(customer.getEmail());
 	        });
 	    }

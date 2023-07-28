@@ -67,7 +67,8 @@ class CustomerJPADataAccessServiceTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID()
+				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID(),
+				faker.demographic().sex()
 						);
 		
 		underTest.insertCustomer(customer);
@@ -90,13 +91,9 @@ class CustomerJPADataAccessServiceTest
     void existsCustomerWithId()
     {
     	int id=1;
-    
-    	
     	
     	underTest.existsCustomerWithId(id);
     	verify(customerRepository).existsCustomerById(id);
-    	
-    	
     }
 
     @Test
@@ -117,13 +114,11 @@ class CustomerJPADataAccessServiceTest
 		Customer customer = new Customer(
 				20,
 				faker.name().fullName(),
-				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID()
+				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID(),
+				faker.demographic().sex()
 						);
     	
-        
         underTest.updateCustomer(customer);
-
-        
         verify(customerRepository).save(customer);
     }
 }

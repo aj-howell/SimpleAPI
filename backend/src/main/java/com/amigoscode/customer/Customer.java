@@ -32,36 +32,38 @@ public class Customer
 		allocationSize=1)
 		@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="customer_id_seq")
 		
-		private Integer id;
-		@Column(
-				nullable=false
-				)
-		private Integer age;
-		@Column(
-				nullable=false
-				)
-		private String name;
-		@Column(
-				nullable=false
-			
-				)
+	    private Integer id;
+
+	    @Column(nullable = false)
+	    private Integer age;
+
+	    @Column(nullable = false)
+	    private String name;
+
+	    @Column(nullable = false)
+	    private String gender;
+
+		
+		
 		private String email;
 		
 		public Customer(){} // default constructor
 		
-		public Customer(Integer id, Integer age, String name, String email)
+		public Customer(Integer id, Integer age, String name, String email, String gender)
 		{
 			this.id=id;
 			this.age=age;
 			this.name=name;
 			this.email=email;
+			this.gender=gender;
 		}
 		
-		public Customer( Integer age, String name, String email) // id will automatically be sequenced by the database
+		public Customer( Integer age, String name, String email, String gender) // id will automatically be sequenced by the database
 		{
 			this.age=age;
 			this.name=name;
 			this.email=email;
+			this.gender=gender;
 		}
 		
 		public Integer getId() {
@@ -75,6 +77,14 @@ public class Customer
 		}
 		public String getEmail() {
 			return email;
+		}
+		
+		public String getGender() {
+			return gender;
+		}
+
+		public void setGender(String gender){
+			this.gender = gender;
 		}
 		public void setId(Integer id) {
 			this.id = id;
@@ -94,7 +104,7 @@ public class Customer
 		@Override
 		public int hashCode()
 		{
-			return Objects.hash(id, name,email, age);
+			return Objects.hash(id, name,email, age, gender);
 		}
 		
 		@Override
@@ -106,7 +116,7 @@ public class Customer
 			if (getClass() != obj.getClass())
 				return false;
 			Customer other = (Customer) obj;
-			return Objects.equals(age, other.age) && Objects.equals(email, other.email) && Objects.equals(id, other.id)
+			return Objects.equals(age, other.age) && Objects.equals(email, other.email) && Objects.equals(id, other.id) && Objects.equals(gender, other.gender)
 					&& Objects.equals(name, other.name);
 		}
 

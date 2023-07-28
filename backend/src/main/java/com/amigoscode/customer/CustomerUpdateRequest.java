@@ -1,5 +1,5 @@
 package com.amigoscode.customer;
 
-public record CustomerUpdateRequest(Integer age, String name, String email) {
+public record CustomerUpdateRequest(Integer age, String name, String email, String gender) {
 
 }

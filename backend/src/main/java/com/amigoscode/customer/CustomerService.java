@@ -43,7 +43,7 @@ public class CustomerService // serves as a way to actually be able to use the "
 			throw new DuplicateResourceException("Email Already Exist");
 		}
 		
-		customerDAO.insertCustomer(new Customer(c.age(),c.name(),c.email()));
+		customerDAO.insertCustomer(new Customer(c.age(),c.name(),c.email(), c.gender()));
 	}
 
 	public void deleteCustomerById(Integer customerId)

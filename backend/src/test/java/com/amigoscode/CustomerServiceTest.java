@@ -53,7 +53,7 @@ class CustomerServiceTest {
 	void testGetCustomer()
 	{
 		int id=20;
-		Customer c = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+		Customer c = new Customer(id, 20, "Kevin", "Kevin@gmail.com","M");
 		Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(c));
 		
 		Customer actual = underTest.getCustomer(id);
@@ -66,7 +66,7 @@ class CustomerServiceTest {
 	void testGetCustomerNot()
 	{
 		int id=20;
-		Customer c = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+		Customer c = new Customer(id, 20, "Kevin", "Kevin@gmail.com", "M");
 		Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.empty());
 		
 		
@@ -80,7 +80,7 @@ class CustomerServiceTest {
 	void testAddCustomer()
 	{
 		int id=20;
-		CustomerRegistrationRequest c = new CustomerRegistrationRequest(20, "Kevin", "Kevin@gmail.com");
+		CustomerRegistrationRequest c = new CustomerRegistrationRequest(20, "Kevin", "Kevin@gmail.com","M");
 		
 		Mockito.when(customerDAO.existsCustomerWithEmail(c.email())).thenReturn(false);
 		underTest.addCustomer(c);
@@ -96,13 +96,14 @@ class CustomerServiceTest {
 		assertThat(capturedCustomer.getAge()).isEqualTo(c.age());
 		assertThat(capturedCustomer.getEmail()).isEqualTo(c.email());
 		assertThat(capturedCustomer.getName()).isEqualTo(c.name());
+		assertThat(capturedCustomer.getGender()).isEqualTo(c.gender());
 	}
 
 	@Test
 	void testAddCustomerNot()
 	{
 		int id=20;
-		CustomerRegistrationRequest c = new CustomerRegistrationRequest(20, "Kevin", "Kevin@gmail.com");
+		CustomerRegistrationRequest c = new CustomerRegistrationRequest(20, "Kevin", "Kevin@gmail.com","M");
 		
 		Mockito.when(customerDAO.existsCustomerWithEmail(c.email())).thenReturn(true);
 
@@ -142,14 +143,14 @@ class CustomerServiceTest {
 	 @Test
 	    void canUpdateAllCustomersProperties() {
 			int id=20;
-			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com", "M");
 		 	
 	        Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
 	        String newEmail = "alexandro@amigoscode.com";
 
 	        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
-	                23,"Alexandro", newEmail);
+	                23,"Alexandro", newEmail, "M");
 
 	        Mockito.when(customerDAO.existsCustomerWithEmail(newEmail)).thenReturn(false);
 
@@ -171,12 +172,12 @@ class CustomerServiceTest {
 	    @Test
 	    void canUpdateOnlyCustomerName() {
 			int id=20;
-			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com","M");
 	
 	        Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
 	        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
-	                null,"Alexandro", null);
+	                null,"Alexandro", null,"M");
 
 	        underTest.updateCustomer(id, updateRequest);
 
@@ -195,14 +196,14 @@ class CustomerServiceTest {
 	    @Test
 	    void canUpdateOnlyCustomerEmail() {
 			int id=20;
-			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com","M");
 	
 	        Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
 	        String newEmail = "alexandro@amigoscode.com";
 
 	        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
-	                null, null,newEmail);
+	                null, null,newEmail,"M");
 
 	        Mockito.when(customerDAO.existsCustomerWithEmail(newEmail)).thenReturn(false);
 
@@ -224,12 +225,12 @@ class CustomerServiceTest {
 	    @Test
 	    void canUpdateOnlyCustomerAge() {
 			int id=20;
-			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com","M");
 	    	
 	        Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
 	        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
-	        		22,null, null);
+	        		22,null, null,"M");
 
 	        underTest.updateCustomer(id, updateRequest);
 
@@ -247,14 +248,14 @@ class CustomerServiceTest {
 	    @Test
 	    void willThrowWhenTryingToUpdateCustomerEmailWhenAlreadyTaken() {
 			int id=20;
-			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com","M");
 	 
 	        Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
 	        String newEmail = "alexandro@amigoscode.com";
 
 	        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
-	                null, null,newEmail);
+	                null, null,newEmail,"M");
 
 	        Mockito.when(customerDAO.existsCustomerWithEmail(newEmail)).thenReturn(true);
 
@@ -270,12 +271,12 @@ class CustomerServiceTest {
 	    @Test
 	    void willThrowWhenCustomerUpdateHasNoChanges() {
 			int id=20;
-			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com");
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com","M");
 	 
 	        Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
 
 	        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
-	        		customer.getAge(),customer.getName(), customer.getEmail());
+	        		customer.getAge(),customer.getName(), customer.getEmail(),customer.getGender());
 
 	        
 	        assertThatThrownBy(() -> underTest.updateCustomer(id, updateRequest))

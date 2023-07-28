@@ -63,6 +63,7 @@ return (
 						name={customer.name}
 						age={customer.age}
 						email={customer.email}
+						gender={customer.gender}
 					>
 					</CardWithImage>
 					</WrapItem>

@@ -43,8 +43,8 @@ public class Main
 					(
 						ran.nextInt(16, 99),
 						Fname+" "+Lname,
-						email
-						
+						email,
+						fake.demographic().sex()
 					);			
 //			Customer Alex = new Customer(1, 21, "Alex", "Alex@gmail.com");
 //			Customer Josh = new Customer(2, 25, "Josh", "Josh@gmail.com");
