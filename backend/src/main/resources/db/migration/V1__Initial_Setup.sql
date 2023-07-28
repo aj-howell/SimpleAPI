@@ -4,5 +4,4 @@ CREATE TABLE customer
 	name TEXT NOT NULL,
 	email TEXT NOT NULL UNIQUE,
 	age INT NOT NULL,
-	gender Text NOT NULL
 );
