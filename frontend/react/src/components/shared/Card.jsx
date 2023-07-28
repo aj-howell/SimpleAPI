@@ -13,7 +13,7 @@ import {
 
 export default function CardWithImage({id, name, email, age, gender}) {
 	
-	const random_gender = gender === 'Male' ? "men":"women";
+	const rand_gender = gender === 'Male' ? "men":"women";
     return (
         <Center py={6}>
             <Box
@@ -35,7 +35,7 @@ export default function CardWithImage({id, name, email, age, gender}) {
                     <Avatar
                         size={'xl'}
                         src={
-                            `https://randomuser.me/api/portraits/${random_gender}/${age}.jpg`
+                            `https://randomuser.me/api/portraits/${rand_gender}/${age}.jpg`
                         }
                         alt={'Author'}
                         css={{
