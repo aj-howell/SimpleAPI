@@ -19,7 +19,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <docker.username>ahowell2000</docker.username>
         <docker.image.name>amigoscode-api</docker.image.name>
-        <docker.image.tag/>
+        <docker.image.tag>latest</docker.image.tag>
     </properties>
 
     <dependencies>
@@ -164,9 +164,6 @@
                     </from>
                     <to>
                         <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
-                        <tags>
-                            <tag>latest</tag>
-                        </tags>
                     </to>
                 </configuration>
             </plugin>
