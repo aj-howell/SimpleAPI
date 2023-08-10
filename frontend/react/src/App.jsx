@@ -3,7 +3,8 @@ import SidebarWithHeader from './components/shared/SideBar'
 import { useEffect, useState } from 'react'
 import {getCustomers} from './services/client.js'
 import { Spinner } from '@chakra-ui/react'
-import CardWithImage from './components/shared/Card'
+import CardWithImage from './components/Card'
+import DrawerForm from './components/DrawerForm'
 
 const App = ()=>
 {
@@ -45,6 +46,7 @@ if(customers.length <= 0)
 	return (
 		<SidebarWithHeader>
 			<Text>No Customers available</Text>
+			<DrawerForm />
 		</SidebarWithHeader>
 	);
 }
@@ -52,9 +54,10 @@ if(customers.length <= 0)
 	
 return (
 		<SidebarWithHeader>
+		<DrawerForm />
 		<Wrap>
 		{
-				
+				//within map component or html element that uses the index needs a key
 				customers.map((customer, i) =>
 				(
 					<WrapItem key={i}>

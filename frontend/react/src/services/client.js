@@ -14,3 +14,18 @@ export const getCustomers = async ()=>
 		console.log(err);
 	}
 }
+
+export const saveCustomer = async(customer)=>
+{
+		try{
+		
+		// this will add our customer request into the json file
+		const customers= await axios.post(`${VITE_API_BASE_URL}/api/v1/customers`, customer);
+		//console.log(customers);
+		return customers;
+		
+	}catch(err)
+	{
+		throw err;
+	}
+}
