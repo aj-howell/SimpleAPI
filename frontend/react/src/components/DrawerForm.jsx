@@ -7,7 +7,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-  Input,
   useDisclosure
 } from '@chakra-ui/react';
 import CreateCustomerForm from './CreateCustomerForm';
@@ -22,7 +21,7 @@ const CloseIcon = ()=>
 	return "X"
 }
 
-const DrawerForm = ()=>
+const DrawerForm = ({fetchCustomers})=>
 {
 	const {isOpen,onOpen,onClose} = useDisclosure();
 	return <>	
@@ -40,7 +39,7 @@ const DrawerForm = ()=>
 
           <DrawerBody>
           
-          <CreateCustomerForm/>
+          <CreateCustomerForm fetchCustomers ={fetchCustomers}/>
           
           </DrawerBody>
 

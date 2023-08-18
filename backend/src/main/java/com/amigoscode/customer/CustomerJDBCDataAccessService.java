@@ -27,6 +27,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 				"""
 				SELECT id, age, name, email, gender 
 				FROM customer
+				ORDER BY id ASC
 				""";
 		
 		//grabs all customers from database then maps each characteristic to a new customer to then store into a list

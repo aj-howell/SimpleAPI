@@ -5,30 +5,41 @@ import {getCustomers} from './services/client.js'
 import { Spinner } from '@chakra-ui/react'
 import CardWithImage from './components/Card'
 import DrawerForm from './components/DrawerForm'
+import { errorNotification} from './services/notifcation'
 
 const App = ()=>
 {
 	//use states allow you to use setters to define them later
 	const [customers, setCustomers]= useState([]);
 	const [loading, setLoading]= useState(false);
+	const [error, setError]= useState("");
 	
-	useEffect(()=>
-	{
-		setLoading(true);
+	const fetchCustomers = () =>
+{
+	setLoading(true);
 		getCustomers().then(res =>
 		{
 			setCustomers(res.data);
+			
 		})
-		.catch(e =>
+		.catch(err =>
 		{
-			console.log(e);
+			setError(err.code, err.response.data.message);
+			errorNotification(err.code, err.response.data.message)
 		})
 		.finally( () =>
 		{
 			setLoading(false);
 		})
-	},[]);
+}
 	
+	useEffect(()=>
+	{
+		fetchCustomers();
+	},[])
+	
+
+
 if(loading)
 {
   return( <SidebarWithHeader>
@@ -41,32 +52,45 @@ if(loading)
 	</SidebarWithHeader>)
 }
 
-if(customers.length <= 0)
+if(error)
 {
+	//can pass functions as props as well
 	return (
 		<SidebarWithHeader>
-			<Text>No Customers available</Text>
-			<DrawerForm />
+			<DrawerForm fetchCustomers ={fetchCustomers}/> 
+			<Text mt={5}>An error has occured</Text>
 		</SidebarWithHeader>
 	);
 }
 
-	
+if(customers.length <= 0)
+{
+	//can pass functions as props as well
+	return (
+		<SidebarWithHeader>
+		
+			<DrawerForm fetchCustomers ={fetchCustomers}/> 
+			<Text mt={5}>No Customers available</Text>
+		</SidebarWithHeader>
+	);
+}
+
 return (
 		<SidebarWithHeader>
-		<DrawerForm />
+		<DrawerForm fetchCustomers ={fetchCustomers}/>
 		<Wrap>
 		{
-				//within map component or html element that uses the index needs a key
+				//within map component or html element that uses an index needs a key
 				customers.map((customer, i) =>
 				(
 					<WrapItem key={i}>
 					<CardWithImage key={i}
-						id={i}
+						id={customer.id}
 						name={customer.name}
 						age={customer.age}
 						email={customer.email}
 						gender={customer.gender}
+						fetchCustomers={fetchCustomers}
 					>
 					</CardWithImage>
 					</WrapItem>

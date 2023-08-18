@@ -11,7 +11,7 @@ import
     Stack
 } from '@chakra-ui/react';
 import * as Yup from 'yup';
-import { saveCustomer } from '../services/client';
+import { saveCustomer, updateCustomer } from '../services/client';
 import { errorNotification, successNotification } from '../services/notifcation';
 
 const MyTextInput = ({ label, ...props }) => {
@@ -50,42 +50,32 @@ const MySelect = ({ label, ...props }) => {
 };
 
 // And now we can use these
-const CreateCustomerForm = ({fetchCustomers}) => {
+const UpdateCustomerForm = ({fetchCustomers, initialValues, id}) => {
   return (
     <>
       <Formik
-        initialValues={{
-          name: '',
-          email: '',
-          age: 0, // added for our checkbox
-          gender: '', // added for our select
-        }}
+        initialValues={initialValues}
         
         //have to correspond to the labels below
         validationSchema={Yup.object({
           name: Yup.string()
             .max(15, 'Must be 15 characters or less')
-            .required('Required'),
+            .required(),
           email: Yup.string()
             .email('Invalid email address')
-            .required('Required'),
+            .required(),
           age: Yup.number()
             .min(16, 'Must be 16 years old or older')
             .max(100)
-            .required('Required'),
-          gender: Yup.string()
-            .oneOf(
-              ['Male', 'Female'],
-              'Invalid gender'
-            )
-            .required('Required')
+            .required()
+            
         })}
-        onSubmit={(customer, { setSubmitting }) => {
+        onSubmit={(update, { setSubmitting }) => {
 		setSubmitting(true)
-         saveCustomer(customer)
+         updateCustomer(id, update)
          .then(res => {
 		console.log(res);
-		successNotification("Customer Created", `customer: ${customer.name} has been created`);
+		successNotification("Customer updated", `customer: ${update.name} has been updated`);
 		fetchCustomers();
 		})
          .catch(err =>{
@@ -122,14 +112,7 @@ const CreateCustomerForm = ({fetchCustomers}) => {
             name="age"
             type="number"
             placeholder="10"
-          />
-
-          <MySelect label="Gender" name="gender">
-            <option value="">Select a Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </MySelect>
-          
+          />          
           
           <Button type="submit">Submit</Button>
         </Stack>
@@ -140,4 +123,4 @@ const CreateCustomerForm = ({fetchCustomers}) => {
   );
 };
 
-export default CreateCustomerForm;
+export default UpdateCustomerForm;
