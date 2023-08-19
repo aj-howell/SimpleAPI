@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Text, Wrap, WrapItem } from '@chakra-ui/react'
+import {  Text, Wrap, WrapItem } from '@chakra-ui/react'
 import SidebarWithHeader from './components/shared/SideBar'
 import { useEffect, useState } from 'react'
 import {getCustomers} from './services/client.js'
