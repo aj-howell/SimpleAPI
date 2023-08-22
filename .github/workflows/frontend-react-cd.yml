@@ -2,11 +2,11 @@ name: CD - Deploy React Frontend
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - frontend/react/**
+    push:
+      branches:
+        - main
+      paths:
+        - frontend/react/**
 
 jobs:
   deploy:
@@ -17,15 +17,17 @@ jobs:
         working-directory: ./frontend/react
     
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Slack commit message and sha
-        run: >
-          curl -X POST -H 'Content-type: application/json'
-          --data '{"text":":github: https://github.com/aj-howell/SimpleAPI/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}"}'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":":github: https://github.com/aj-howell/SimpleAPI/commit/${{ github.sha }} - ${{ github.event.head_commit.message }}"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
       - name: Set build number
         id: build-number
-        run: echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
+        run: |
+          echo "BUILD_NUMBER=$(date '+%d.%m.%Y.%H.%M.%S')" >> $GITHUB_OUTPUT
       
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -34,12 +36,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
           
       - name: Docker Build and push
+        env:
+          USERNAME: ahowell2000
+          REPO: amigoscode-react
         run: |
           chmod +x ../../.ci/build-publish.sh
-          USERNAME=ahowell2000
-          REPO=amigoscode-react
           TAG=${{ steps.build-number.outputs.BUILD_NUMBER }}
           ../../.ci/build-publish.sh . --build-arg api_base_url=http://amigoscode-api-env.eba-bsgma65y.us-east-1.elasticbeanstalk.com:80
+          
       - name: Update Dockerrun.aws.json api image tag with new build number
         env:
           USERNAME: ahowell2000
@@ -50,6 +54,7 @@ jobs:
           sed -i -E 's_(ahowell2000/amigoscode-react:)([^"]*)_\1'${{ steps.build-number.outputs.BUILD_NUMBER}}'_' ../Dockerrun.aws.json
           echo "Dockerrun.aws.json after updating tag"
           cat ../Dockerrun.aws.json
+          
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -61,11 +66,13 @@ jobs:
           version_description: ${{ github.SHA }}
           region: ${{ secrets.EB_REGION }}
           deployment_package: Dockerrun.aws.json
+          
       - name: Sending Slack Message
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":"Commit pushed to Github"}'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"Commit pushed to Github"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }} 
+          
       - name: Commit and push Dockerrun.aws.json
         run: |
           git config user.name github-actions
@@ -73,22 +80,22 @@ jobs:
           git add ../Dockerrun.aws.json
           git commit -m "Update Dockerrun.aws.json docker image with new tag ${{ steps.build-number.outputs.BUILD_NUMBER }}"
           git push
-      
+          
       - name: Sending Slack Message
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":"Commit pushed to Github"}'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"Commit pushed to Github"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }} 
-      
+          
       - name: Sending Slack Message
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":"Deployment Completed"}'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"Deployment Completed"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }} 
-      
+          
       - name: Send Slack Message
         if: always()
-        run: >
-          curl -X POST -H 'Content-type: application/json' 
-          --data '{"text":"Job Status ${{ job.status }}"}' 
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"Job Status ${{ job.status }}"}' \
           ${{ secrets.SLACK_WEBHOOK_URL }}
