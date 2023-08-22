@@ -37,8 +37,8 @@ jobs:
           
       - name: Docker Build and push
         run: |
-          USERNAME=ahowell2000 \
-          REPO=amigoscode-react \
+          USERNAME= ${{ secrets.DOCKERHUB_USERNAME }} \
+          REPO= amigoscode-react \
           chmod +x ../../.ci/build-publish.sh
           TAG=${{ steps.build-number.outputs.BUILD_NUMBER }}
           ../../.ci/build-publish.sh . --build-arg api_base_url=http://amigoscode-api-env.eba-bsgma65y.us-east-1.elasticbeanstalk.com:80
