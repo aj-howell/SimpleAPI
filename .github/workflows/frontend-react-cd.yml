@@ -44,8 +44,6 @@ jobs:
           ../../.ci/build-publish.sh . --build-arg api_base_url=http://amigoscode-api-env.eba-bsgma65y.us-east-1.elasticbeanstalk.com:80
           
       - name: Update Dockerrun.aws.json api image tag with new build number
-          USERNAME: ahowell2000
-          REPO: amigoscode-react
         run: |
           echo "Dockerrun.aws.json before updating tag"
           cat ../Dockerrun.aws.json
