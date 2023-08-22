@@ -36,16 +36,14 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
           
       - name: Docker Build and push
-        env:
-          USERNAME: ahowell2000
-          REPO: amigoscode-react
         run: |
+          USERNAME=ahowell2000 \
+          REPO=amigoscode-react \
           chmod +x ../../.ci/build-publish.sh
           TAG=${{ steps.build-number.outputs.BUILD_NUMBER }}
           ../../.ci/build-publish.sh . --build-arg api_base_url=http://amigoscode-api-env.eba-bsgma65y.us-east-1.elasticbeanstalk.com:80
           
       - name: Update Dockerrun.aws.json api image tag with new build number
-        env:
           USERNAME: ahowell2000
           REPO: amigoscode-react
         run: |
