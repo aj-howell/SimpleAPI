@@ -7,7 +7,6 @@ on:
       - main
     paths:
       - frontend/react/**
-  
 
 jobs:
   deploy:
@@ -43,12 +42,12 @@ jobs:
           ../../.ci/build-publish.sh . --build-arg api_base_url=http://amigoscode-api-env.eba-bsgma65y.us-east-1.elasticbeanstalk.com:80
       - name: Update Dockerrun.aws.json api image tag with new build number
         env:
-        	USERNAME: ahowell2000
-        	REPO: amigoscode-react
+          USERNAME: ahowell2000
+          REPO: amigoscode-react
         run: |
           echo "Dockerrun.aws.json before updating tag"
           cat ../Dockerrun.aws.json
-          sed -i -E 's_(ahowell2000/amigoscode-react:)([^"]*)_\1'${{steps.build-number.outputs.BUILD_NUMBER}}'_' ../Dockerrun.aws.json
+          sed -i -E 's_(ahowell2000/amigoscode-react:)([^"]*)_\1'${{ steps.build-number.outputs.BUILD_NUMBER}}'_' ../Dockerrun.aws.json
           echo "Dockerrun.aws.json after updating tag"
           cat ../Dockerrun.aws.json
       - name: Deploy to Elastic Beanstalk
