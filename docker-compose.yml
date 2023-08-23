@@ -34,7 +34,7 @@ services:
     build:
       context: frontend/react
       args:
-        api_base_url: http://localhost:80
+        api_base_url: http://amigoscode-api-env.eba-bsgma65y.us-east-1.elasticbeanstalk.com:80
     ports:
       - "3000:5173"
     depends_on:
