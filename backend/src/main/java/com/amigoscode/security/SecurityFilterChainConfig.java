@@ -36,6 +36,10 @@ public class SecurityFilterChainConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/api/v1/customers","api/v1/auth/login")
                 .permitAll()
+                .and()
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/ping")
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -49,6 +53,9 @@ public class SecurityFilterChainConfig {
                 )
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
+        
+       
+        
         return http.build();
     }
 
