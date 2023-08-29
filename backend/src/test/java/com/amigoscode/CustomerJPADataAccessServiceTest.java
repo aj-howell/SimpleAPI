@@ -68,7 +68,7 @@ class CustomerJPADataAccessServiceTest
 				20,
 				faker.name().fullName(),
 				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID(),
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		
 		underTest.insertCustomer(customer);
@@ -115,7 +115,7 @@ class CustomerJPADataAccessServiceTest
 				20,
 				faker.name().fullName(),
 				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID(),
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
     	
         underTest.updateCustomer(customer);

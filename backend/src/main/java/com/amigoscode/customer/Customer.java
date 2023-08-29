@@ -1,6 +1,13 @@
 package com.amigoscode.customer;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,7 +30,7 @@ import jakarta.persistence.UniqueConstraint;
 		)	
 	}
 )
-public class Customer 
+public class Customer implements UserDetails
 {
 	//these annotations help map a class to tables in a database (including Entity)
 		@Id
@@ -42,6 +49,9 @@ public class Customer
 
 	    @Column(nullable = false)
 	    private String gender;
+	    
+	    @Column(nullable = false)
+	    private String password;
 
 		
 		
@@ -49,20 +59,22 @@ public class Customer
 		
 		public Customer(){} // default constructor
 		
-		public Customer(Integer id, Integer age, String name, String email, String gender)
+		public Customer(Integer id, Integer age, String name, String email, String password, String gender)
 		{
 			this.id=id;
 			this.age=age;
 			this.name=name;
 			this.email=email;
 			this.gender=gender;
+			this.password=password;
 		}
 		
-		public Customer( Integer age, String name, String email, String gender) // id will automatically be sequenced by the database
+		public Customer( Integer age, String name, String email, String password, String gender) // id will automatically be sequenced by the database
 		{
 			this.age=age;
 			this.name=name;
 			this.email=email;
+			this.password=password;
 			this.gender=gender;
 		}
 		
@@ -118,6 +130,48 @@ public class Customer
 			Customer other = (Customer) obj;
 			return Objects.equals(age, other.age) && Objects.equals(email, other.email) && Objects.equals(id, other.id) && Objects.equals(gender, other.gender)
 					&& Objects.equals(name, other.name);
+		}
+
+		@Override
+		public Collection<? extends GrantedAuthority> getAuthorities() {
+			// TODO Auto-generated method stub
+			return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		}
+
+		@Override
+		public String getPassword() {
+			// TODO Auto-generated method stub
+			return this.password;
+		}
+
+		@Override
+		public String getUsername() {
+			// TODO Auto-generated method stub
+			return email;
+		}
+
+		@Override
+		public boolean isAccountNonExpired() {
+			// TODO Auto-generated method stub
+			return true;
+		}
+
+		@Override
+		public boolean isAccountNonLocked() {
+			// TODO Auto-generated method stub
+			return true;
+		}
+
+		@Override
+		public boolean isCredentialsNonExpired() {
+			// TODO Auto-generated method stub
+			return true;
+		}
+
+		@Override
+		public boolean isEnabled() {
+			// TODO Auto-generated method stub
+			return true;
 		}
 
 

@@ -1,8 +1,6 @@
 package com.amigoscode;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.CALLS_REAL_METHODS;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +32,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				faker.internet().safeEmailAddress()+"-"+UUID.randomUUID(),
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		
 		underTest.insertCustomer(customer);
@@ -62,7 +60,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		
 		underTest.insertCustomer(customer);
@@ -96,7 +94,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -121,7 +119,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -148,7 +146,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 				);
 		underTest.insertCustomer(customer);
 		
@@ -170,7 +168,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -204,7 +202,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		underTest.insertCustomer(customer);
 		
@@ -230,7 +228,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        		20,
 	                faker.name().fullName(),
 	                email,
-	                faker.demographic().sex()
+	                "password", faker.demographic().sex()
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -272,7 +270,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        		20,
 	                faker.name().fullName(),
 	                email,
-	               faker.demographic().sex()
+	               "password", faker.demographic().sex()
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -300,7 +298,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	            assertThat(c.getId()).isEqualTo(id);
 	            assertThat(c.getEmail()).isEqualTo(newEmail); // change
 	            assertThat(c.getName()).isEqualTo(customer.getName());
-	            assertThat(c.getGender().equals(customer.getGender()));
+	            assertThat(c.getGender()).isEqualTo(customer.getGender());
 	            assertThat(c.getAge()).isEqualTo(customer.getAge());
 	        });
 	    }
@@ -313,7 +311,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        		 20,
 	                faker.name().fullName(),
 	                email,
-	                faker.demographic().sex()
+	                "password", faker.demographic().sex()
 	               
 	        );
 
@@ -356,7 +354,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        		 20,
 	                faker.name().fullName(),
 	                email,
-	                gender
+	                "password", gender
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -392,7 +390,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        		20,
 	                faker.name().fullName(),
 	                email,
-	                faker.demographic().sex()
+	                "password", faker.demographic().sex()
 	        );
 
 	        underTest.insertCustomer(customer);

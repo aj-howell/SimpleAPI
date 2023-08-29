@@ -1,6 +1,6 @@
 package com.amigoscode.customer;
 
-public record CustomerRegistrationRequest(Integer age,String name, String email, String gender)
+public record CustomerRegistrationRequest(Integer age,String name, String email,String password,String gender)
 {
 
 }

@@ -2,11 +2,13 @@ server:
   port: 8085
   error:
     include-message: always
-    
+
 cors:
   allowed-origins: "*"
   allowed-methods: "*"
-  
+  allowed-headers: "*"
+  exposed-headers: "*"
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/customer
@@ -15,10 +17,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+          format_sql: true
     show-sql: true
-  main:
-    web-application-type: SERVLET
+  logging:
+    level:
+      org.hibernate: info
+
+main:
+  web-application-type: SERVLET

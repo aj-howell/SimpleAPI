@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Import;
 
 import com.amigoscode.customer.Customer;
 import com.amigoscode.customer.CustomerJDBCDataAccessService;
@@ -22,6 +23,7 @@ import com.amigoscode.customer.CustomerRowMapper;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace=AutoConfigureTestDatabase.Replace.NONE)
+@Import(TestConfig.class)
 class CustomerRepositoryTest extends AbstractTestcontainersUnitTest
 {
 	@Autowired
@@ -45,7 +47,7 @@ class CustomerRepositoryTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		underTest.save(customer);
 		
@@ -71,7 +73,7 @@ class CustomerRepositoryTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		underTest.save(customer);
 		
@@ -92,7 +94,7 @@ class CustomerRepositoryTest extends AbstractTestcontainersUnitTest
 				20,
 				faker.name().fullName(),
 				email,
-				faker.demographic().sex()
+				"password", faker.demographic().sex()
 						);
 		
 		underTest.save(customer);

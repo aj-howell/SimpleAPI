@@ -25,15 +25,15 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 	public List<Customer> SelectAllCustomers() {
 		var sql = 
 				"""
-				SELECT id, age, name, email, gender 
+				SELECT * 
 				FROM customer
 				ORDER BY id ASC
 				""";
 		
 		//grabs all customers from database then maps each characteristic to a new customer to then store into a list
-		return  jdbctemplate.query(sql, customerRowMapper);
-		
-	
+		return  jdbctemplate.query(sql, customerRowMapper)
+				.stream()
+				.toList();
 	}
 	
 	@Override
@@ -41,7 +41,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 	{
 		var sql = 
 				"""
-				SELECT id, age, name, email, gender
+				SELECT id, age, name, email,  password, gender
 				FROM customer
 				WHERE id = ?
 				""";
@@ -53,9 +53,9 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 	@Override
 	public void insertCustomer(Customer C) {
 		var sql="""
-					INSERT INTO customer(age,name, email, gender) VALUES(?,?,?,?)
+					INSERT INTO customer(age,name, email, password, gender) VALUES(?,?,?,?,?)
 				""";
-		int update=jdbctemplate.update(sql, C.getAge(), C.getName(), C.getEmail(), C.getGender());
+		int update=jdbctemplate.update(sql, C.getAge(), C.getName(), C.getEmail(), C.getPassword(),C.getGender());
 		System.out.println("jdbctemplate update = "+update);
 	}
 
@@ -125,6 +125,19 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 		}
 		
 		
+	}
+
+	@Override
+	public Optional<Customer> selectCustomerByEmail(String email) {
+		var sql = 
+				"""
+				SELECT id, age, name, email,  password, gender
+				FROM customer
+				WHERE email = ?
+				""";
+		return  jdbctemplate.query(sql, customerRowMapper, email)
+				.stream()
+				.findFirst();
 	}
 
 }

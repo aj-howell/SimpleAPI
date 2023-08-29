@@ -3,6 +3,7 @@ package com.amigoscode.customer;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.amigoscode.exceptions.BadDataRequest;
@@ -14,21 +15,27 @@ public class CustomerService // serves as a way to actually be able to use the "
 // this serves as the business layer and any protocols or permissions that need to be handled will be done here which will interact with the database
 {
 	private final CustomerDAO customerDAO; // gives us access to the methods we need
+	private final PasswordEncoder passwordEncoder;
 	
-	public CustomerService(@Qualifier("jdbc")CustomerDAO customerDAO) //qualifiers configure what repository will be used
+	public CustomerService(@Qualifier("jdbc")CustomerDAO customerDAO,  PasswordEncoder passwordEncoder) //qualifiers configure what repository will be used
 	{
 		this.customerDAO = customerDAO;
-	
+		this.passwordEncoder=passwordEncoder;
 	}
 	
-	public List<Customer> getAllCustomers()
+	public List<CustomerDTO> getAllCustomers()
 	{
-		return customerDAO.SelectAllCustomers();
+		return customerDAO
+				.SelectAllCustomers()
+				.stream()
+				.map(c-> new CustomerDTO(c))
+				.toList();
 	}
 	
-	public Customer getCustomer(Integer ID)
+	public CustomerDTO getCustomer(Integer ID)
 	{
 		return customerDAO.selectCustomerById(ID)
+				.map(c->new CustomerDTO(c))
 				.orElseThrow(
 						
 						() -> new ResourceNotFound(
@@ -43,7 +50,7 @@ public class CustomerService // serves as a way to actually be able to use the "
 			throw new DuplicateResourceException("Email Already Exist");
 		}
 		
-		customerDAO.insertCustomer(new Customer(c.age(),c.name(),c.email(), c.gender()));
+		customerDAO.insertCustomer(new Customer(c.age(),c.name(),c.email(), passwordEncoder.encode(c.password()), c.gender()));
 	}
 
 	public void deleteCustomerById(Integer customerId)
@@ -61,7 +68,13 @@ public class CustomerService // serves as a way to actually be able to use the "
 	public void updateCustomer(Integer customerId, CustomerUpdateRequest R) 
 	{
 	      // TODO: for JPA use .getReferenceById(customerId) as it does does not bring object into memory and instead a reference
-        Customer customer = getCustomer(customerId);
+        Customer customer = customerDAO.selectCustomerById(customerId)
+        		.orElseThrow
+        		(
+        				()->new ResourceNotFound(
+								"customer with id [%s] not found".formatted(customerId)
+								)
+        		);
 
         boolean changes = false;
 

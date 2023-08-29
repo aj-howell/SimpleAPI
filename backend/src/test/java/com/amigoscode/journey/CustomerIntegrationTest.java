@@ -13,9 +13,12 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import com.amigoscode.JWT.AuthenticationRequest;
 import com.amigoscode.customer.Customer;
+import com.amigoscode.customer.CustomerDTO;
 import com.amigoscode.customer.CustomerRegistrationRequest;
 import com.amigoscode.customer.CustomerUpdateRequest;
+import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
 
@@ -39,30 +42,37 @@ public class CustomerIntegrationTest
 		String email = fakerName.lastName()+"-"+UUID.randomUUID()+"@gmail.com";
 		String gender = faker.demographic().sex();
 		int age = random.nextInt(1,100);
-		CustomerRegistrationRequest request = new CustomerRegistrationRequest(age,name,email,gender);
+		CustomerRegistrationRequest request = new CustomerRegistrationRequest(age,name,email,"password",gender);
 		
-		//Send post Request
-		webClient.post()
-		.uri("api/v1/customers")
-		.accept(MediaType.APPLICATION_JSON)
-		.contentType(MediaType.APPLICATION_JSON)
-		.body(Mono.just(request),CustomerRegistrationRequest.class)
-		.exchange()
-		.expectStatus().isOk();
-		
+		//Send post Request & extracting token
+		String jwtToken = webClient.post()
+		        .uri("api/v1/customers")
+		        .accept(MediaType.APPLICATION_JSON)
+		        .contentType(MediaType.APPLICATION_JSON)
+		        .body(Mono.just(request), CustomerRegistrationRequest.class)
+		        .exchange()
+		        .expectStatus()
+		        .isOk()
+		        .returnResult(Void.class)
+		        .getResponseHeaders()
+		        .get(HttpHeaders.AUTHORIZATION)
+		        .get(0);
+		        //.getFirst(HttpHeaders.AUTHORIZATION);	
 		//Get everyone from API
-		List<Customer> allCustomers = webClient.get()
+		List<CustomerDTO> allCustomers = webClient.get()
 		.uri("api/v1/customers")
 		.accept(MediaType.APPLICATION_JSON)
+		.header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
 		.exchange()
 		.expectStatus()
 		.isOk()
-		.expectBodyList(new ParameterizedTypeReference<Customer>(){})
+		.expectBodyList(new ParameterizedTypeReference<CustomerDTO>(){})
 		.returnResult()
 		.getResponseBody();
 		
 		//make sure Customer is preset
-		Customer expected = new Customer(age,name,email,gender);
+		Customer e = new Customer(age,name,email,"password", gender);
+		CustomerDTO expected = new CustomerDTO(e);
 		
 		assertThat(allCustomers)
 		.usingRecursiveFieldByFieldElementComparatorIgnoringFields("id")
@@ -80,10 +90,11 @@ public class CustomerIntegrationTest
 		webClient.get()
 		.uri("api/v1/customers/{id}",id)
 		.accept(MediaType.APPLICATION_JSON)
+		.header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
 		.exchange()
 		.expectStatus()
 		.isOk()
-		.expectBody(new ParameterizedTypeReference<Customer>(){})
+		.expectBody(new ParameterizedTypeReference<CustomerDTO>(){})
 		.isEqualTo(expected);
 		
 	}
@@ -91,7 +102,7 @@ public class CustomerIntegrationTest
 	@Test
 	void canDelete()
 	{
-		// create registartion request
+		// create registration request
 		Faker faker = new Faker();
 		Name fakerName = faker.name();
 		String name= fakerName.fullName();
@@ -99,25 +110,33 @@ public class CustomerIntegrationTest
 		String gender= faker.demographic().sex();
 		
 		int age = random.nextInt(1,100);
-		CustomerRegistrationRequest request = new CustomerRegistrationRequest(age,name,email,gender);
+		CustomerRegistrationRequest request = new CustomerRegistrationRequest(age,name,email,"password",gender);
 		
 		//Send post Request
-		webClient.post()
-		.uri("api/v1/customers")
-		.accept(MediaType.APPLICATION_JSON)
-		.contentType(MediaType.APPLICATION_JSON)
-		.body(Mono.just(request),CustomerRegistrationRequest.class)
-		.exchange()
-		.expectStatus().isOk();
+		String jwtToken = webClient.post()
+		        .uri("api/v1/customers")
+		        .accept(MediaType.APPLICATION_JSON)
+		        .contentType(MediaType.APPLICATION_JSON)
+		        .body(Mono.just(request), CustomerRegistrationRequest.class)
+		        .exchange()
+		        .expectStatus()
+		        .isOk()
+		        .returnResult(Void.class)
+		        .getResponseHeaders()
+		        .get(HttpHeaders.AUTHORIZATION)
+		        .get(0);
+		
 		
 		//Get everyone from API
-		List<Customer> allCustomers = webClient.get()
+		List<CustomerDTO> allCustomers = 
+		webClient.get()
 		.uri("api/v1/customers")
 		.accept(MediaType.APPLICATION_JSON)
+		.header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
 		.exchange()
 		.expectStatus()
 		.isOk()
-		.expectBodyList(new ParameterizedTypeReference<Customer>(){})
+		.expectBodyList(new ParameterizedTypeReference<CustomerDTO>(){})
 		.returnResult()
 		.getResponseBody();
 		
@@ -132,17 +151,35 @@ public class CustomerIntegrationTest
 		.delete()
 		.uri("api/v1/customers/{id}",id)
 		.accept(MediaType.APPLICATION_JSON)
+		.header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
 		.exchange()
 		.expectStatus()
 		.isOk();
+		
+		// need to re-validate after a deletion of the token
+		String jwtToken2 = webClient.post()
+		        .uri("api/v1/customers")
+		        .accept(MediaType.APPLICATION_JSON)
+		        .contentType(MediaType.APPLICATION_JSON)
+		        .body(Mono.just(request), CustomerRegistrationRequest.class)
+		        .exchange()
+		        .expectStatus()
+		        .isOk()
+		        .returnResult(Void.class)
+		        .getResponseHeaders()
+		        .get(HttpHeaders.AUTHORIZATION)
+		        .get(0);
+		
 		//get Customer by Id
 		
-		webClient.get()
+		webClient
+		.get()
 		.uri("api/v1/customers/{id}",id)
 		.accept(MediaType.APPLICATION_JSON)
+		.header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken2))
 		.exchange()
 		.expectStatus()
-		.isNotFound();
+		.isNotFound(); //placeholder for 404 status code 
 	}
 	
 	@Test
@@ -158,23 +195,30 @@ public class CustomerIntegrationTest
         String gender = faker.demographic().sex();
 
         CustomerRegistrationRequest request = new CustomerRegistrationRequest(
-                age,name,email,gender
+                age,name,email,"password",gender
         );
 
         // send a post request
-        webClient.post()
-                .uri("api/v1/customers")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(request), CustomerRegistrationRequest.class)
-                .exchange()
-                .expectStatus()
-                .isOk();
+		String jwtToken = webClient.post()
+		        .uri("api/v1/customers")
+		        .accept(MediaType.APPLICATION_JSON)
+		        .contentType(MediaType.APPLICATION_JSON)
+		        .body(Mono.just(request), CustomerRegistrationRequest.class)
+		        .exchange()
+		        .expectStatus()
+		        .isOk()
+		        .returnResult(Void.class)
+		        .getResponseHeaders()
+		        .get(HttpHeaders.AUTHORIZATION)
+		        .get(0);
+		
+
 
         // get all customers
         List<Customer> allCustomers = webClient.get()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -201,6 +245,7 @@ public class CustomerIntegrationTest
         webClient.put()
                 .uri("api/v1/customers/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(updateRequest), CustomerUpdateRequest.class)
                 .exchange()
@@ -211,6 +256,7 @@ public class CustomerIntegrationTest
         Customer updatedCustomer = webClient.get()
                 .uri("api/v1/customers/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -219,10 +265,51 @@ public class CustomerIntegrationTest
                 .getResponseBody();
 
         Customer expected = new Customer(
-                id, age,newName,email,gender
+                id, age,newName,email,"password", gender
         );
         
         assertThat(updatedCustomer).isEqualTo(expected);
 	}
+	
+	@Test
+		void canLogin()
+		{
+			Faker faker = new Faker();
+			Name fakerName = faker.name();
+			String name= fakerName.fullName();
+			String email = fakerName.lastName()+"-"+UUID.randomUUID()+"@gmail.com";
+			String gender= faker.demographic().sex();
+			String password = "password";
+			
+			int age = random.nextInt(1,100);
+			CustomerRegistrationRequest customer_request = new CustomerRegistrationRequest(age,name,email,password,gender);
+		
+			
+			String jwtToken=webClient
+			.post()
+			.uri("api/v1/customers")
+			.accept(MediaType.APPLICATION_JSON) //what is the types are acceptable to submit
+			.contentType(MediaType.APPLICATION_JSON) //what you are going to submit to
+			.body(Mono.just(customer_request), CustomerRegistrationRequest.class)
+			.exchange() //perform HTTP requestId
+			.expectStatus()
+			.isOk()
+			.returnResult(Void.class) //return result
+			.getResponseHeaders()
+			.get(HttpHeaders.AUTHORIZATION) //grab specific header type
+			.get(0);
+			
+			AuthenticationRequest request= new AuthenticationRequest(email, password);
+			
+			webClient
+			.post()
+			.uri("api/v1/auth/login")
+			.accept(MediaType.APPLICATION_JSON) //what is the types are acceptable to submit
+			.contentType(MediaType.APPLICATION_JSON) //what you are going to submit to
+			.body(Mono.just(request), AuthenticationRequest.class)
+			.exchange() //perform HTTP request
+			.expectStatus()
+			.isOk();	
+		}
 	
 }
