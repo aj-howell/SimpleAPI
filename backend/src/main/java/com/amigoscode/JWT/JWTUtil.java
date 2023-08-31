@@ -25,7 +25,7 @@ public class JWTUtil {
 		.setSubject(Subject)
 		.setIssuer("https://amigscode.com")
 		.setIssuedAt(Date.from(Instant.now()))
-		.setExpiration(Date.from(Instant.now().plus(2, ChronoUnit.DAYS)))
+		.setExpiration(Date.from(Instant.now().plus(3, ChronoUnit.DAYS)))
 		.signWith(getSigningKey(),SignatureAlgorithm.HS256)
 		.compact();
 		
