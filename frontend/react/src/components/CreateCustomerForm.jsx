@@ -59,6 +59,7 @@ const CreateCustomerForm = ({fetchCustomers}) => {
           email: '',
           age: 0, // added for our checkbox
           gender: '', // added for our select
+          password: ''
         }}
         
         //have to correspond to the labels below
@@ -78,6 +79,10 @@ const CreateCustomerForm = ({fetchCustomers}) => {
               ['Male', 'Female'],
               'Invalid gender'
             )
+            .required('Required'),
+          password: Yup.string()
+          .min(5, "Must be at least 5 characters")
+            .max(20, 'Must be 20 characters or less')
             .required('Required')
         })}
         onSubmit={(customer, { setSubmitting }) => {
@@ -129,6 +134,13 @@ const CreateCustomerForm = ({fetchCustomers}) => {
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </MySelect>
+          
+         <MyTextInput
+            label="Password"
+            name="password"
+            type="password"
+            placeholder="password"
+          />
           
           
           <Button type="submit">Submit</Button>

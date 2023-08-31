@@ -33,7 +33,7 @@ public class AuthenticationService
 		 
 		    Customer principal = (Customer) authentication.getPrincipal();
 		    CustomerDTO customerDTO = new CustomerDTO(principal);
-		    String token = jwtUtil.issueToken(customerDTO.getName(), customerDTO.getRoles());
-		    return new AuthenticationResponse(token);
+		    String token = jwtUtil.issueToken(customerDTO.getEmail(), customerDTO.getRoles());
+		    return new AuthenticationResponse(token, customerDTO.getId().intValue());
 	}
 }

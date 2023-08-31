@@ -1,6 +1,7 @@
 package com.amigoscode.customer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +30,7 @@ public class CustomerService // serves as a way to actually be able to use the "
 				.SelectAllCustomers()
 				.stream()
 				.map(c-> new CustomerDTO(c))
-				.toList();
+				.collect(Collectors.toList());
 	}
 	
 	public CustomerDTO getCustomer(Integer ID)

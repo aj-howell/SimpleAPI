@@ -2,18 +2,26 @@ import axios from 'axios';
 
 const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const getCustomers = async ()=>
-{
-	try{
-		const customers= await axios.get(`${VITE_API_BASE_URL}/api/v1/customers`);
-		//console.log(customers);
-		return customers;
-		
-	}catch(err)
-	{
-		console.log(err);
-	}
+export const getCustomers = async () => {
+  try {
+    const customers = await axios.get(`${VITE_API_BASE_URL}/api/v1/customers`, getAuthConfig());
+    return customers;//actual object
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 }
+
+export const getCustomer = async (id) => {
+  try {
+    const customer = await axios.get(`${VITE_API_BASE_URL}/api/v1/customers/${id}`, getAuthConfig());
+    return customer;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
 
 export const saveCustomer = async(customer)=>
 {
@@ -35,7 +43,8 @@ export const deleteCustomer = async(id)=>
 	// eslint-disable-next-line no-useless-catch	
 	try
 	{
-		const customers = await axios.delete(`${VITE_API_BASE_URL}/api/v1/customers/${id}`);
+		const customers = await axios.delete(`${VITE_API_BASE_URL}/api/v1/customers/${id}`,
+		getAuthConfig());
 		return customers;		
 	}catch(err)
 	{
@@ -48,10 +57,30 @@ export const updateCustomer = async(id,update)=>
 	// eslint-disable-next-line no-useless-catch	
 	try
 	{
-		const customers = await axios.put(`${VITE_API_BASE_URL}/api/v1/customers/${id}`, update); //think of what the response body would actually be instead of specific values
+		const customers = await axios.put(`${VITE_API_BASE_URL}/api/v1/customers/${id}`, update,
+		getAuthConfig()); //think of what the response body would actually be instead of specific values
 		return customers;		
 	}catch(err)
 	{
 		throw err;
 	}
 }
+
+export const login = async(UsernameAndPassword)=>
+{
+	// eslint-disable-next-line no-useless-catch	
+	try
+	{
+	  return await axios.post(`${VITE_API_BASE_URL}/api/v1/auth/login`, UsernameAndPassword);
+				
+	}catch(err)
+	{
+		throw err;
+	}
+}
+
+export const getAuthConfig = ()=>
+({headers:
+{
+	Authorization: `Bearer ${localStorage.getItem("access_token")}`
+}})

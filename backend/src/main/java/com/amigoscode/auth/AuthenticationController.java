@@ -9,7 +9,7 @@ import com.amigoscode.JWT.AuthenticationRequest;
 import com.amigoscode.JWT.AuthenticationResponse;
 
 @RestController
-@RequestMapping("api/v1/auth/login")
+@RequestMapping("api/v1/auth")
 public class AuthenticationController{
 
 	private final AuthenticationService service;
@@ -19,12 +19,13 @@ public class AuthenticationController{
 		this.service=service;
 	} 
 	
-	@PostMapping
+	@PostMapping("/login")
 	public ResponseEntity<?> authLogin(@RequestBody AuthenticationRequest request)
 	{
 	       AuthenticationResponse response = service.Login(request);
 	        return ResponseEntity.ok()
 	                .header(HttpHeaders.AUTHORIZATION, response.token())
-	                .build();
+	                .body(response);
 	}
+	
 }

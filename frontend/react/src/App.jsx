@@ -17,8 +17,11 @@ const App = ()=>
 	const fetchCustomers = () =>
 {
 	setLoading(true);
+	
+		//request
 		getCustomers().then(res =>
 		{
+			//res.data
 			setCustomers(res.data);
 			
 		})
@@ -30,6 +33,7 @@ const App = ()=>
 		.finally( () =>
 		{
 			setLoading(false);
+			//setCustomers([]);
 		})
 }
 	

@@ -40,7 +40,8 @@ public class Main
 						ran.nextInt(16, 99),
 						Fname+" "+Lname,
 						email,
-						passwordEncoder.encode(UUID.randomUUID().toString()), fake.demographic().sex()
+						passwordEncoder.encode(UUID.randomUUID().toString()),
+						fake.demographic().sex()
 					);			
 			
 			customerRepository.save(customer);
