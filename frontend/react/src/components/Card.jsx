@@ -35,7 +35,6 @@ export default function CardWithImage({id, name, email, age, gender, fetchCustom
 	
 	const disclosure = useDisclosure()
 	const disclosure2=useDisclosure();
-	
   	const cancelRef = React.useRef()
   	
   	const AddIcon = ()=>
