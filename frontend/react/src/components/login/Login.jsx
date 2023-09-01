@@ -10,7 +10,8 @@ import {
   Text,
   Alert,
   AlertIcon,
-  Box
+  Box,
+  useDisclosure
 } from '@chakra-ui/react';
 import { Formik, Form, useField } from 'formik';
 import * as Yup from 'yup';
@@ -18,6 +19,7 @@ import { useAuth } from '../context/AuthContext';
 import { errorNotification } from '../../services/notifcation';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import RegisterDrawerForm from '../register/RegisterDrawerForm';
 
 const MyTextInput = ({ label, ...props }) => {
   // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
@@ -105,6 +107,7 @@ const Login = ()=> {
   
   const{customer}=useAuth();
   const navigate= useNavigate();
+  const {isOpen,onOpen,onClose} = useDisclosure();
   
   useEffect(()=>
   {
@@ -121,6 +124,7 @@ const Login = ()=> {
         alt={"Amigoscode Logo"}/>
           <Heading fontSize={'2xl'}>Sign in to your account</Heading>
           <LoginForm/>
+       	  <RegisterDrawerForm/>
         </Stack>
       </Flex>
       <Flex flex={1}
