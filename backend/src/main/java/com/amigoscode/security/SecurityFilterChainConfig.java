@@ -38,7 +38,7 @@ public class SecurityFilterChainConfig {
                 .permitAll()
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/ping")
+                .requestMatchers(HttpMethod.GET, "/ping", "/actuator/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

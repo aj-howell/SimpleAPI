@@ -9,6 +9,14 @@ cors:
   allowed-headers: "*"
   exposed-headers: "*"
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "health"
+          - "info"
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/customer
@@ -22,9 +30,6 @@ spring:
           dialect: org.hibernate.dialect.PostgreSQLDialect
           format_sql: true
     show-sql: true
-  logging:
-    level:
-      org.hibernate: info
 
 main:
   web-application-type: SERVLET
