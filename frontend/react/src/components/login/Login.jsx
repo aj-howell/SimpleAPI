@@ -55,7 +55,7 @@ const LoginForm =()=>
 			then(res=>
 			{
 				console.log("successfully login", res);
-				navigate("/dashboard")
+				navigate("/dashboard/home")
 			})
 			.catch(err=>
 			{
