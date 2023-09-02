@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import Customer from './Customer.jsx'
 import './index.css'
 import { ChakraProvider } from '@chakra-ui/react'
 import { createStandaloneToast } from '@chakra-ui/react'
@@ -8,6 +8,7 @@ import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import Login from './components/login/Login.jsx'
 import AuthProvider from './components/context/AuthContext.jsx'
 import ProtectedRoute from './components/shared/ProtectedRoute.jsx'
+import Home from './Home.jsx'
 const router = createBrowserRouter([
 	{
 		path: "/",
@@ -15,8 +16,13 @@ const router = createBrowserRouter([
 	},
 	
 	{
-		path: "/dashboard",
-		element: <ProtectedRoute><App/></ProtectedRoute>
+		path: "/dashboard/customer",
+		element: <ProtectedRoute><Customer/></ProtectedRoute>
+	},
+	
+	{
+		path: "/dashboard/home",
+		element: <ProtectedRoute><Home/></ProtectedRoute>
 	}
 	
 ])

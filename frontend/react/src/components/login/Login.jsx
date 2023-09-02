@@ -113,7 +113,7 @@ const Login = ()=> {
   {
 	 if(customer)
 	 {
-		 navigate("/dashboard")
+		 navigate("/dashboard/customer")
 	 } 
   })
   return (
