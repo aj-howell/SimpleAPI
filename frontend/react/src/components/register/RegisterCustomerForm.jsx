@@ -94,7 +94,7 @@ const RegisterCustomerForm = () => {
          register(customer)
          .then(res => {
 		console.log(res);
-		navigate("/")
+		navigate("/dashboard/customer")
 		})
          .catch(err =>{
 			 console.log(err);

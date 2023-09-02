@@ -7,7 +7,7 @@ import CardWithImage from './components/Card'
 import DrawerForm from './components/DrawerForm'
 import { errorNotification} from './services/notifcation'
 
-const App = ()=>
+const Customer = ()=>
 {
 	//use states allow you to use setters to define them later
 	const [customers, setCustomers]= useState([]);
@@ -105,4 +105,4 @@ return (
 		</SidebarWithHeader>
 	)
 }
-export default App
+export default Customer
