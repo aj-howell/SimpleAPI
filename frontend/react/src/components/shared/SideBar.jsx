@@ -31,6 +31,7 @@ import {
 } from 'react-icons/fi';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import ToggleDarkMode from './ToggleDarkMode';
 
 const LinkItems = [
   { name: 'Home', route: 'home' ,icon: FiHome },
@@ -165,6 +166,8 @@ const MobileNav = ({ onOpen, ...rest }) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
+          {ToggleDarkMode()}
+
         <IconButton
           size="lg"
           variant="ghost"
