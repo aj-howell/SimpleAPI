@@ -43,12 +43,12 @@ public class CustomerController
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> registerCustomer(@RequestBody CustomerRegistrationRequest c)
+	public ResponseEntity<?> registerCustomer(@RequestBody CustomerRegistrationRequest c) 
 	{
 		customerService.addCustomer(c);
 		String jwtToken = jwtUtil.issueToken(c.email(), "ROLE_USER");
 		return ResponseEntity.ok()
-		.header(HttpHeaders.AUTHORIZATION, jwtToken)
+		.header(HttpHeaders.AUTHORIZATION, jwtToken) // we aren't returning anything to the body when we are registering 
 		.build();
 	}
 	

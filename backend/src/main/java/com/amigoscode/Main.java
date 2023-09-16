@@ -45,7 +45,6 @@ public class Main
 					);			
 			
 			customerRepository.save(customer);
-			//customerRepository.findById(1);
 		};
 		
 	}

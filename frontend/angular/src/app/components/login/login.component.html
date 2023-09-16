@@ -1,0 +1,104 @@
+<p-sidebar [(visible)]="isVisible" position="left" styleClass="p-sidebar-lg" [transitionOptions]="'300ms cubic-bezier(0,0,0.2, 1)'">
+    <div class="customerForm">
+        <h2>
+            New Customer
+        </h2>
+        <div class="field">
+            <label for="firstname">Name</label>
+            <input pInputText
+            [(ngModel)]="customerReq.name"
+            id="firstname"
+            placeholder="Enter Name"
+            type="text"
+            class="w-full"/>
+    
+            <label for="age" class="mt-3">Age</label>
+            <input pInputText
+            [(ngModel)]="customerReq.age"
+            id="age"
+            placeholder="Select Age"
+            type="number"
+            class="w-full"/>
+    
+            <label for="Email" class="mt-3">Email</label>
+            <input pInputText
+            [(ngModel)]="customerReq.email"
+            placeholder="Enter Email"
+            id="Email"
+            type="text"
+            class="w-full"/>
+    
+            <label for="password" class="mt-3">Password</label>
+            <input pInputText
+            [(ngModel)]="customerReq.password"
+            id="password"
+            placeholder="Enter Password"
+            type="password"
+            class="w-full"
+            />
+    
+            <label for="gender" class="mt-3">Gender</label>
+            <select
+            id="gender"
+            [(ngModel)]="customerReq.gender"
+            class="p-dropdown w-full custom-select"
+            >
+                <option>Select an option</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+        <button pButton label="Submit" class="w-full" (click)="register()"></button>
+    </div>
+</p-sidebar>
+
+
+<div class="flex" style="height: 100vh;">
+    <div class="col-6 m-3 flex flex-column justify-content-center">
+        <div class="text-center">
+            <p-avatar 
+            image="https://user-images.githubusercontent.com/40702606/210880158-e7d698c2-b19a-4057-b415-09f48a746753.png"
+            styleClass="mr-2"
+            size="xlarge"></p-avatar>
+            <h1>Sign into your account</h1>
+        </div>
+        <div> 
+            <p-message 
+            *ngIf="errMsg"
+            severity="error"
+            [text]="errMsg"
+            styleClass="mb-2"></p-message>  
+        </div>
+        <div>
+            <label for="firstname" >Name</label>
+            <input pInputText
+            id="firstname"
+            placeholder="Enter Name"
+            type="text"
+            class="w-full mt-2"
+            [(ngModel)]="authenticationRequest.username"/>
+        </div>
+       
+       <div class="mt-3">
+            <label for="password" class="mb-2">Password</label>
+            <input pInputText
+            id="password"
+            placeholder="Enter Password"
+            type="password"
+            [(ngModel)]="authenticationRequest.password"
+            class="w-full mt-2"
+        />
+
+        <button pButton label="Login" class="w-full p-button-secondary mt-3" (click)="login()"></button>
+        <button pButton label="Register" class="w-full p-button-info mt-3" (click)="isVisible=true"></button>
+
+        </div>
+    
+    </div>
+    <div class="col-6 flex flex-column justify-content-center align-items-center rightContainer">
+        <h1>
+            <a href="https://github.com/aj-howell/SimpleAPI" target="_blank">View Source</a>
+        </h1>
+        <img src="https://user-images.githubusercontent.com/40702606/215539167-d7006790-b880-4929-83fb-c43fa74f429e.png" class="background p-6 pt-0" alt="Amigoscode" >
+    </div>
+</div>

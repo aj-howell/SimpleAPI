@@ -1,0 +1,34 @@
+<p-sidebar [(visible)]="isVisible" position="right" styleClass="p-sidebar-lg" [transitionOptions]="'300ms cubic-bezier(0,0,0.2, 1)'">
+    <app-manage-customer [customerReq]="customerReq" [operation]="operation" (submit)="saveCustomer($event)" (cancel)="onCancel()"></app-manage-customer>
+</p-sidebar>
+
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+
+<p-toast position="bottom-center"></p-toast>
+
+<div class="flex align-items-strectch" style="height: 99vh;">
+
+    <div class="flex flex-column align-items-strectch border-right-1 col-2 border-gray-200">
+        <app-menu-bar></app-menu-bar>
+    </div>
+
+    <div class="flex flex-column flex-grow-1 ">
+
+        <div>
+            <app-header-bar [customer]="customer"></app-header-bar>
+        </div>
+
+        <div class="main-container p-3">
+            <button pButton pRipple icon="pi pi-plus" label="Create Customer" class="p-button-info" (click)="onCreate()"></button>
+            
+            <div class="flex justify-content-center align-items-center flex-wrap gap-5 mt-4">
+                <app-customer-card *ngFor="let Customer of customers; let index =index" [customer]="Customer"  [customerIndex]="index" (submit)="deleteCustomer($event)" (update)="updateCustomer($event)">
+                </app-customer-card>
+            </div>
+        </div>
+    
+    </div>
+
+</div>
+
+

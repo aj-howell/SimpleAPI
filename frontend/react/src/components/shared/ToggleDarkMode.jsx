@@ -1,12 +1,16 @@
-import { Switch, localStorageManager, useDisclosure, useColorMode, FormLabel, FormControl } from '@chakra-ui/react';
+import { Switch,  useColorMode, FormLabel } from '@chakra-ui/react';
 import * as React from 'react';
 
 export default function ToggleDarkMode() {
 
-const { colorMode, toggleColorMode, setColorMode } = useColorMode()
+const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <>
+
+    {
+    //used in conjunction
+    }
     <Switch id='ThemeMode' onChange={()=>
         {
             toggleColorMode();

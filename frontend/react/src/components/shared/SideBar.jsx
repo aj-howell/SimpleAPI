@@ -166,7 +166,7 @@ const MobileNav = ({ onOpen, ...rest }) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-          {ToggleDarkMode()}
+          <ToggleDarkMode/>
 
         <IconButton
           size="lg"

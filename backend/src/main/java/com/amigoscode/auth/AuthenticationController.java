@@ -24,8 +24,8 @@ public class AuthenticationController{
 	{
 	       AuthenticationResponse response = service.Login(request);
 	        return ResponseEntity.ok()
-	                .header(HttpHeaders.AUTHORIZATION, response.token())
-	                .body(response);
+	                .header(HttpHeaders.AUTHORIZATION, response.token()) 
+	                .body(response); // attach custom response to body
 	}
 	
 }
