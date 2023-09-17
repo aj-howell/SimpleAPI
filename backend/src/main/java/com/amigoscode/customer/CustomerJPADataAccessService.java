@@ -2,8 +2,6 @@ package com.amigoscode.customer;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 @Repository("jpa") // Queries to DB
@@ -26,6 +24,7 @@ public class CustomerJPADataAccessService implements CustomerDAO
 				.findAll()
 				.stream()
 				.sorted((c1, c2)->c1.getId().compareTo(c2.getId()))
+				.limit(50)
 				.toList();//finds every instance from our table 
 	}
 
@@ -72,6 +71,11 @@ public class CustomerJPADataAccessService implements CustomerDAO
 	public Optional<Customer> selectCustomerByEmail(String email) {
 		// TODO Auto-generated method stub
 		return customerRepository.findCustomerByEmail(email);
+	}
+
+	@Override
+	public void uploadCustomerImageID(String ImageId, Integer customerID) {
+		customerRepository.updateImageId(ImageId, customerID);
 	}
 
 	

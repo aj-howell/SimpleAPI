@@ -12,12 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
-
 import com.amigoscode.JWT.AuthenticationRequest;
 import com.amigoscode.customer.Customer;
 import com.amigoscode.customer.CustomerDTO;
 import com.amigoscode.customer.CustomerRegistrationRequest;
-import com.amigoscode.customer.CustomerUpdateRequest;
 import com.github.dockerjava.zerodep.shaded.org.apache.hc.core5.http.HttpHeaders;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Name;
@@ -179,7 +177,7 @@ public class CustomerIntegrationTest
 		.header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken2))
 		.exchange()
 		.expectStatus()
-		.isNotFound(); //placeholder for 404 status code 
+		.isNotFound();
 	}
 	
 	@Test
@@ -215,14 +213,14 @@ public class CustomerIntegrationTest
 
 
         // get all customers
-        List<Customer> allCustomers = webClient.get()
+        List<CustomerDTO> allCustomers = webClient.get()
                 .uri("api/v1/customers")
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBodyList(new ParameterizedTypeReference<Customer>() {
+                .expectBodyList(new ParameterizedTypeReference<CustomerDTO>() {
                 })
                 .returnResult()
                 .getResponseBody();
@@ -238,8 +236,8 @@ public class CustomerIntegrationTest
 
         String newName = "Ali";
 
-        CustomerUpdateRequest updateRequest = new CustomerUpdateRequest(
-        		null,newName,null,gender
+        CustomerRegistrationRequest updateRequest = new CustomerRegistrationRequest(
+        		null,newName,null,"password",gender
         );
 
         webClient.put()
@@ -247,26 +245,25 @@ public class CustomerIntegrationTest
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(updateRequest), CustomerUpdateRequest.class)
+                .body(Mono.just(updateRequest), CustomerRegistrationRequest.class)
                 .exchange()
                 .expectStatus()
                 .isOk();
 
         // get customer by id
-        Customer updatedCustomer = webClient.get()
+        CustomerDTO updatedCustomer = webClient.get()
                 .uri("api/v1/customers/{id}", id)
                 .accept(MediaType.APPLICATION_JSON)
                 .header(HttpHeaders.AUTHORIZATION,String.format("Bearer %s",jwtToken))
                 .exchange()
                 .expectStatus()
                 .isOk()
-                .expectBody(Customer.class)
+                .expectBody(CustomerDTO.class)
                 .returnResult()
                 .getResponseBody();
 
-        Customer expected = new Customer(
-                id, age,newName,email,"password", gender
-        );
+		Customer C=new Customer(id, age,newName,email,"password", gender);
+        CustomerDTO expected = new CustomerDTO(C);
         
         assertThat(updatedCustomer).isEqualTo(expected);
 	}

@@ -1,8 +1,13 @@
 package com.amigoscode;
 
+import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.AfterEach;
@@ -32,13 +37,38 @@ class CustomerJPADataAccessServiceTest
 		underTest = new CustomerJPADataAccessService(customerRepository);
 	}
 
-	@Test
-	void selectAllCustomer()
-	{
-		underTest.SelectAllCustomers();
-		
-		verify(customerRepository).findAll();
-	}
+    @Test
+    void selectAllCustomer() {
+        List<Customer> customers = createListOfCustomersWithSizeGreaterThan50();
+
+        when(customerRepository.findAll()).thenReturn(customers);
+
+        List<Customer> result = underTest.SelectAllCustomers();
+
+        verify(customerRepository).findAll();
+        
+        assertEquals(50, result.size());
+        List<Customer> expectedCustomers = customers.subList(0, 50);
+        assertEquals(expectedCustomers, result);
+    }
+
+    private List<Customer> createListOfCustomersWithSizeGreaterThan50() {
+        List<Customer> customers = new ArrayList<>();
+        
+        for (int i = 1; i <= 60; i++) {
+            Customer customer = new Customer(
+                i,
+                25,
+                "Customer " + i,
+                "email@example.com",
+                "password" + i,
+                "Male"
+            );
+            customers.add(customer);
+        }
+        
+        return customers;
+    }
 	
 	@Test
 	void selectCustomerById()

@@ -2,11 +2,8 @@ package com.amigoscode.customer;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.stereotype.Repository;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCallback;
-import org.springframework.jdbc.core.RowMapper;
 
 @Repository("jdbc")
 public class CustomerJDBCDataAccessService implements CustomerDAO
@@ -28,7 +25,9 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 				SELECT * 
 				FROM customer
 				ORDER BY id ASC
+				LIMIT 50
 				""";
+
 		
 		//grabs all customers from database then maps each characteristic to a new customer to then store into a list
 		return  jdbctemplate.query(sql, customerRowMapper)
@@ -41,7 +40,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 	{
 		var sql = 
 				"""
-				SELECT id, age, name, email,  password, gender
+				SELECT id, age, name, email,  password, gender, image_id
 				FROM customer
 				WHERE id = ?
 				""";
@@ -131,13 +130,21 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 	public Optional<Customer> selectCustomerByEmail(String email) {
 		var sql = 
 				"""
-				SELECT id, age, name, email,  password, gender
+				SELECT id, age, name, email,  password, gender, image_id
 				FROM customer
 				WHERE email = ?
 				""";
 		return  jdbctemplate.query(sql, customerRowMapper, email)
 				.stream()
 				.findFirst();
+	}
+
+	@Override
+	public void uploadCustomerImageID(String ImageId, Integer customerID) {
+				var sql = """
+					UPDATE customer SET image_id = ? WHERE id = ?
+				  """;
+			 jdbctemplate.update(sql, ImageId, customerID);
 	}
 
 }

@@ -41,7 +41,7 @@ class CustomerServiceTest {
 	@BeforeEach
 	void setUp() throws Exception
 	{
-		underTest = new CustomerService(customerDAO, passwordEncoder)
+		underTest = new CustomerService(customerDAO, passwordEncoder, null, null)
 				;
 	}
 	

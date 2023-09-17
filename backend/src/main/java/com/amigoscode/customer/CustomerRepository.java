@@ -3,6 +3,8 @@ package com.amigoscode.customer;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 
 //Already Has Repository Annotation by default
@@ -14,4 +16,8 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer>
 	void deleteCustomerById(Integer customerId);
 	boolean existsCustomerById(Integer Id);
 	Optional<Customer> findCustomerByEmail(String email);
+	
+	@Modifying
+	@Query("UPDATE Customer c SET c.image_id=?1 WHERE c.id =?2")
+	int updateImageId(String id, Integer customerID);
 }

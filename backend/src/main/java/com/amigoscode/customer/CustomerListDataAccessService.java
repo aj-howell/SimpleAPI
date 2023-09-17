@@ -76,6 +76,11 @@ public class CustomerListDataAccessService implements CustomerDAO
 			
 	}
 
+	@Override
+	public void uploadCustomerImageID(String ImageId, Integer customerID) {
+		// TODO implement this
+	}
+
 
 
 }
