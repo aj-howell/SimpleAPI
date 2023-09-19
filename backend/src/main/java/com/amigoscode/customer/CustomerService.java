@@ -124,7 +124,6 @@ public class CustomerService // serves as a way to actually be able to use the "
 			 String imageId = UUID.randomUUID().toString();
 			 s3Service.putObject(s3Bucket.getCustomer(), "profile/image/customer/"+customerId+"/"+imageId, file.getBytes());
 
-			 //Store Image
 				customerDAO.uploadCustomerImageID(imageId,customerId);
 			}
 
@@ -136,7 +135,7 @@ public class CustomerService // serves as a way to actually be able to use the "
 		} catch (IOException e) {
 			throw new ResourceNotFound("customer with id [%s] image was not found".formatted(customerId));
 		}
-    }
+  }
 
     public byte[] downloadCustomerPhoto(Integer customerId) {
 			 CustomerDTO customer = customerDAO.selectCustomerById(customerId)
@@ -150,6 +149,5 @@ public class CustomerService // serves as a way to actually be able to use the "
 			else{
 			 return s3Service.getObject("profile/image/customer/"+customer.getId()+"/"+customer.getImage_id(), s3Bucket.getCustomer());
 			}
-
     }
 }
