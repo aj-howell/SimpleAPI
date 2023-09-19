@@ -3,7 +3,8 @@ package com.amigoscode.customer;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository("jpa") // Queries to DB
@@ -22,11 +23,9 @@ public class CustomerJPADataAccessService implements CustomerDAO
 	@Override
 	public List<Customer> SelectAllCustomers() {
 		// TODO Auto-generated method stub
-		return customerRepository
-				.findAll()
-				.stream()
-				.sorted((c1, c2)->c1.getId().compareTo(c2.getId()))
-				.toList();//finds every instance from our table 
+		Page<Customer> page= customerRepository
+				.findAll(Pageable.ofSize(50));
+		return page.getContent();
 	}
 
 	@Override

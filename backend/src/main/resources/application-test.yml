@@ -1,0 +1,10 @@
+aws:
+  region: us-east-1
+  s3:
+    mock: false
+
+spring:
+  datasource:
+    url: jdbc:postgresql://awseb-e-mfgjkmkeev-stack-awsebrdsdatabase-wbgpjck8hzdx.cb6ndl9gkegq.us-east-1.rds.amazonaws.com:5432/ebdb
+    username: amigoscode
+    password: password

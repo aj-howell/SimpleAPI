@@ -1,6 +1,7 @@
 package com.amigoscode.customer;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -107,4 +108,33 @@ public class CustomerService // serves as a way to actually be able to use the "
 	
 			
 	}
+
+    public void uploadCustomerPhoto(Integer customerId, MultipartFile file) {
+		try {
+			boolean ans = customerDAO.existsCustomerWithId(customerId)==true ? true:false;
+
+			if(ans){
+			 s3Service.putObject(s3Bucket.getCustomer(), "profile-image-customer-"+customerId, file.getBytes());
+
+			 //Store Image
+				customerDAO.uploadCustomerImageID("profile-image-customer-"+customerId, customerId);
+			 
+			}
+		} catch (IOException e) {
+			throw new ResourceNotFound("customer with id [%s] not found".formatted(customerId));
+		}
+    }
+
+    public byte[] downloadCustomerPhoto(Integer customerId) {
+			 CustomerDTO customer = customerDAO.selectCustomerById(customerId)
+			 				.map(c-> new CustomerDTO(c))
+							.orElseThrow(()->new ResourceNotFound("Customer with id [%s] not found".formatted(customerId)));
+
+			if(customer.image_id.isBlank())
+			{
+				throw new ResourceNotFound("Customer [%s] Image with id [%s] not found".formatted(customerId, customer.image_id));
+			}
+
+			 return s3Service.getObject("profile_image_customer-"+customer.image_id, s3Bucket.getCustomer());
+    }
 }

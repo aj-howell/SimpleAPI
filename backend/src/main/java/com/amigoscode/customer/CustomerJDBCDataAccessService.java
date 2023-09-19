@@ -28,6 +28,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 				SELECT * 
 				FROM customer
 				ORDER BY id ASC
+				LIMIT 1000
 				""";
 		
 		//grabs all customers from database then maps each characteristic to a new customer to then store into a list

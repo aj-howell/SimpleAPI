@@ -1,6 +1,8 @@
 package com.amigoscode;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -417,7 +419,44 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	            assertThat(c.getName()).isEqualTo(customer.getName());
 	            assertThat(c.getGender().equals(customer.getGender()));
 	            assertThat(c.getEmail()).isEqualTo(customer.getEmail());
+				assertThat(c.getPassword()).isEqualTo(customer.getPassword());
 	        });
 	    }
 	
+	@Test
+	void canUploadCustomerPhoto()
+	{
+		String imageID="2222";
+		String email = faker.internet().safeEmailAddress() + "-" + UUID.randomUUID();
+	        Customer customer = new Customer(
+	        		20,
+	                faker.name().fullName(),
+	                email,
+	                "password", faker.demographic().sex()
+	        );
+
+		underTest.insertCustomer(customer);
+
+		Integer customerId= underTest.SelectAllCustomers()
+		 .stream()
+		 .filter(c->c.getEmail().matches(email))
+		 .map(c->c.getId())
+		 .findFirst()
+		 .orElseThrow();
+			
+		underTest.uploadCustomerImageID(imageID, customerId);
+
+		Optional<Customer> actual=underTest.selectCustomerById(customerId); 
+
+		assertThat(actual).isPresent().hasValueSatisfying(c -> {
+	            assertThat(c.getId()).isEqualTo(customerId);
+	            assertThat(c.getAge()).isEqualTo(customer.getAge());
+	            assertThat(c.getName()).isEqualTo(customer.getName());
+	            assertThat(c.getGender().equals(customer.getGender()));
+	            assertThat(c.getEmail()).isEqualTo(customer.getEmail());
+				assertThat(c.getPassword()).isEqualTo(customer.getPassword());
+				assertThat(c.getImage_id()).isEqualTo(imageID);
+	        });
+		
+	}
 }

@@ -4,9 +4,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +22,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.amigoscode.S3.S3Buckets;
+import com.amigoscode.S3.S3Service;
 import com.amigoscode.customer.Customer;
 import com.amigoscode.customer.CustomerDAO;
 import com.amigoscode.customer.CustomerDTO;
@@ -36,12 +46,16 @@ class CustomerServiceTest {
 	private CustomerService underTest;
 	@Mock
 	private PasswordEncoder passwordEncoder;
-	
+	@Mock
+    private S3Buckets s3Bucket;
+	@Mock
+    private S3Service s3Service;
+
 	
 	@BeforeEach
 	void setUp() throws Exception
 	{
-		underTest = new CustomerService(customerDAO, passwordEncoder)
+		underTest = new CustomerService(customerDAO, passwordEncoder, s3Service, s3Bucket)
 				;
 	}
 	
@@ -294,7 +308,133 @@ class CustomerServiceTest {
 	       
 	        verify(customerDAO, never()).updateCustomer(any());
 	    }
-	
-	
 
+
+		@Test
+		void uploadPhotoTest() throws IOException
+		{
+			int id=20;
+	
+			String bucketName="customer-bucket";
+			Mockito.when(s3Bucket.getCustomer()).thenReturn(bucketName);
+	        Mockito.when(customerDAO.existsCustomerWithId(id)).thenReturn(true);
+
+			MultipartFile file = new MockMultipartFile("file","Hello World".getBytes());
+
+			underTest.uploadCustomerPhoto(id, file);
+
+			ArgumentCaptor<String> imageId= ArgumentCaptor.forClass(String.class);
+			ArgumentCaptor<Integer> customerId= ArgumentCaptor.forClass(Integer.class);
+
+			verify(customerDAO).uploadCustomerImageID(imageId.capture(), customerId.capture());
+
+			verify(s3Service).putObject(bucketName, "profile-image-customer-"+customerId.capture()+"-"+imageId.capture(),eq(file.getBytes()));
+
+		}
+
+
+		@Test
+		void ThrowExceptionOnUploadPhotoTest() // scenario where customer doesn't exist
+		{
+			int id=20;
+			Mockito.when(customerDAO.existsCustomerWithId(id)).thenReturn(false);
+			
+			assertThatThrownBy(()->
+			{
+				underTest.uploadCustomerPhoto(id, mock(MultipartFile.class));
+
+			}).isInstanceOf(ResourceNotFound.class)
+			.hasMessage("customer with id [%s] image was not found".formatted(id));
+
+			verify(customerDAO).existsCustomerWithId(id);
+
+			verifyNoMoreInteractions(customerDAO);
+			verifyNoInteractions(s3Bucket);
+			verifyNoInteractions(s3Service);
+		}
+
+		@Test
+		void ThrowExceptionOnUploadPhotoTest2() throws IOException //scenario when the file doesn't exist
+		{
+			int id=20;
+	
+			String bucketName="customer-bucket";
+			Mockito.when(s3Bucket.getCustomer()).thenReturn(bucketName);
+	        Mockito.when(customerDAO.existsCustomerWithId(id)).thenReturn(true);
+
+			MultipartFile file = mock(MultipartFile.class);
+			when(file.getBytes()).thenThrow(IOException.class);
+
+			assertThatThrownBy(()->
+			{
+				underTest.uploadCustomerPhoto(id, file);
+
+			}).isInstanceOf(ResourceNotFound.class)
+			.hasMessage("customer with id [%s] image was not found".formatted(id));
+
+			verify(customerDAO, never()).uploadCustomerImageID(any(), any());
+
+		}
+
+		@Test
+		void getCustomerPhoto()
+		{
+			int id=20;
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com","password", "Male", "2222");
+			Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
+
+			String bucket="customer-bucket";
+
+			byte[] expected = "image".getBytes();
+
+			when(s3Bucket.getCustomer()).thenReturn(bucket);
+			
+			when(s3Service.getObject("profile-image-customer-"+id+"-"+customer.getImage_id(), bucket)).thenReturn("image".getBytes());
+
+			byte[] actualImage=underTest.downloadCustomerPhoto(20);
+
+			assertThat(actualImage).isEqualTo(expected);
+		}
+
+
+		@Test
+		void ThrownExceptionOnGetCustomerPhoto()
+		{
+			//customer exist but w/o image id
+			int id=20;
+			Customer customer = new Customer(id, 20, "Kevin", "Kevin@gmail.com","password", "Male");
+			Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.of(customer));
+
+					
+			assertThatThrownBy(()->
+			{
+				underTest.downloadCustomerPhoto(id);
+
+			}).isInstanceOf(ResourceNotFound.class)
+			.hasMessage("customer with id [%s] image was not found".formatted(id));
+
+			verifyNoInteractions(s3Service);
+			verifyNoInteractions(s3Bucket);
+		}
+
+
+
+		@Test
+		void ThrownExceptionOnGetCustomerPhoto2()
+		{
+			//customer doesn't exist 
+			int id=20;
+			Mockito.when(customerDAO.selectCustomerById(id)).thenReturn(Optional.empty());
+		
+			assertThatThrownBy(()->
+			{
+				underTest.downloadCustomerPhoto(id);
+
+			}).isInstanceOf(ResourceNotFound.class)
+			.hasMessage("Customer with id [%s] was not found".formatted(id));
+
+			verifyNoInteractions(s3Service);
+			verifyNoInteractions(s3Bucket);
+
+		}
 }

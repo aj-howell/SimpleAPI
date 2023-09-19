@@ -31,7 +31,7 @@ public class DefaultExceptionHandler
 				e.getMessage(),
 				HttpStatus.FORBIDDEN.value(),
 				LocalDateTime.now());
-		
+				
 		return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);	
 	}
 
