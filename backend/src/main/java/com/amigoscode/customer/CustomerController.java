@@ -1,7 +1,9 @@
 package com.amigoscode.customer;
 
 import java.util.List;
+
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.MediaType;
+
 import com.amigoscode.JWT.JWTUtil;
 
 @RestController
@@ -75,7 +77,8 @@ public class CustomerController
     }
 
 	
-	@GetMapping("{customerId}/profile-image")
+	@GetMapping(value="{customerId}/profile-image",
+	produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] downloadPhoto(@PathVariable("customerId") Integer customerId)
     {
 		return customerService.downloadCustomerPhoto(customerId);
