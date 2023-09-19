@@ -3,7 +3,7 @@
   "containerDefinitions": [
    {
       "name": "amigoscode-api",
-      "image": "ahowell2000/amigoscode-api:02.09.2023.10.38.24",
+      "image": "ahowell2000/amigoscode-api:19.09.2023.08.18.14",
       "essential": true,
       "memory": 512,
       "portMappings": [
