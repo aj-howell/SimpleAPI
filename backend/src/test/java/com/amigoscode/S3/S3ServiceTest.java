@@ -1,13 +1,12 @@
 package com.amigoscode.S3;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.io.IOException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,6 +81,31 @@ public class S3ServiceTest {
         byte[] data2=underTest.getObject(key, bucket);
         
         assertThat(data2).isEqualTo(data);
+    }
+
+
+    @Test
+    void WillThrowExceptionGetObject() throws IOException {
+        String bucket="customer";
+        String key="team";
+        byte[] data = "hello".getBytes();
+
+        GetObjectRequest objectRequest = GetObjectRequest
+        .builder()
+        .key(key)
+        .bucket(bucket)
+        .build();
+
+        ResponseInputStream<GetObjectResponse> mockObj = mock(ResponseInputStream.class);
+        when(mockObj.readAllBytes()).thenThrow(new IOException("Cannot Read Bytes"));
+
+        when(s3Client.getObject(eq(objectRequest))).thenReturn(mockObj);
+
+
+        assertThatThrownBy(()->underTest.getObject(key, bucket))
+        .isInstanceOf(RuntimeException.class)
+        .hasMessageContaining("Cannot Read Bytes")
+        .hasRootCauseInstanceOf(IOException.class);
     }
 
 }

@@ -25,7 +25,7 @@ public class CustomerJDBCDataAccessService implements CustomerDAO
 				SELECT * 
 				FROM customer
 				ORDER BY id ASC
-				LIMIT 50
+				LIMIT 1000
 				""";
 
 		

@@ -36,7 +36,7 @@ public class CustomerController
 	{
 		return customerService.getAllCustomers();
 	}
-	
+
 	@GetMapping("{customerId}") //Path Variable = may change -> CustomerID
 	public CustomerDTO getCustomer(@PathVariable("customerId") Integer Id)
 	{
@@ -69,14 +69,14 @@ public class CustomerController
 	@PostMapping( value="{customerId}/profile-image",
 	consumes = MediaType.MULTIPART_FORM_DATA_VALUE
 	)
-    public void uploadPhoto(@PathVariable Integer customerId, @RequestParam("file") MultipartFile file)
+    public void uploadPhoto(@PathVariable("customerId") Integer customerId, @RequestParam("file") MultipartFile file)
     {
 		customerService.uploadCustomerPhoto(customerId,file);
     }
 
 	
 	@GetMapping("{customerId}/profile-image")
-    public byte[] downloadPhoto(@PathVariable Integer customerId)
+    public byte[] downloadPhoto(@PathVariable("customerId") Integer customerId)
     {
 		return customerService.downloadCustomerPhoto(customerId);
     }

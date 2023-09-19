@@ -1,5 +1,5 @@
 ALTER TABLE customer
-ADD image_id VARCHAR(36);
+ADD image_id VARCHAR(65);
 
 ALTER TABLE customer
 ADD CONSTRAINT customer_image_id_unqiue

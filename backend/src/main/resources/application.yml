@@ -12,8 +12,9 @@ cors:
 aws:
   region: us-east-1
   s3:
+    mock: true
     buckets:
-        customer: fullstack-ahowell-customer-test
+      customer: fullstack-ahowell-customer-test
 
 management:
   endpoints:
@@ -36,6 +37,13 @@ spring:
           dialect: org.hibernate.dialect.PostgreSQLDialect
           format_sql: true
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 20MB 
+      max-request-size: 20MB
+
+  codec:
+    max-in-memory-size: 10MB
 
 main:
   web-application-type: SERVLET

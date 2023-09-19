@@ -39,8 +39,8 @@ public class S3Service {
     {
             GetObjectRequest objectRequest = GetObjectRequest
                 .builder()
-                .key(keyName)
                 .bucket(bucketName)
+                .key(keyName)
                 .build();
 
         ResponseInputStream<GetObjectResponse> response = s3Client.getObject(objectRequest);
@@ -48,7 +48,7 @@ public class S3Service {
         try {
             return response.readAllBytes();
         } catch (IOException e) {
-            return null;
+            throw new RuntimeException(e);
         }
     }
 

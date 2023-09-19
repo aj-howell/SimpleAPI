@@ -1,21 +1,20 @@
 package com.amigoscode;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.amigoscode.customer.Customer;
 import com.amigoscode.customer.CustomerJPADataAccessService;
 import com.amigoscode.customer.CustomerRepository;
@@ -39,35 +38,18 @@ class CustomerJPADataAccessServiceTest
 
     @Test
     void selectAllCustomer() {
-        List<Customer> customers = createListOfCustomersWithSizeGreaterThan50();
+        Page<Customer> page = mock(Page.class);
+        List<Customer> customers = List.of(new Customer());
+        when(page.getContent()).thenReturn(customers);
+        when(customerRepository.findAll(any(Pageable.class))).thenReturn(page);
+        // When
+        List<Customer> expected = underTest.SelectAllCustomers();
 
-        when(customerRepository.findAll()).thenReturn(customers);
-
-        List<Customer> result = underTest.SelectAllCustomers();
-
-        verify(customerRepository).findAll();
-        
-        assertEquals(50, result.size());
-        List<Customer> expectedCustomers = customers.subList(0, 50);
-        assertEquals(expectedCustomers, result);
-    }
-
-    private List<Customer> createListOfCustomersWithSizeGreaterThan50() {
-        List<Customer> customers = new ArrayList<>();
-        
-        for (int i = 1; i <= 60; i++) {
-            Customer customer = new Customer(
-                i,
-                25,
-                "Customer " + i,
-                "email@example.com",
-                "password" + i,
-                "Male"
-            );
-            customers.add(customer);
-        }
-        
-        return customers;
+        // Then
+        assertThat(expected).isEqualTo(customers);
+        ArgumentCaptor<Pageable> pageArgumentCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(customerRepository).findAll(pageArgumentCaptor.capture());
+        assertThat(pageArgumentCaptor.getValue()).isEqualTo(Pageable.ofSize(50));
     }
 	
 	@Test
@@ -151,5 +133,16 @@ class CustomerJPADataAccessServiceTest
         underTest.updateCustomer(customer);
         verify(customerRepository).save(customer);
     }
+
+	@Test
+	void canUploadCustomerPhoto()
+	{
+		String imageID="2222";
+		Integer customerId=1;
+
+		underTest.uploadCustomerImageID(imageID, customerId);
+
+		verify(customerRepository).updateImageId(imageID, customerId);
+	}
 }
 

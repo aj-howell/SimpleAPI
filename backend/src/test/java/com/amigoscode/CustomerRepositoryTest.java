@@ -121,8 +121,35 @@ class CustomerRepositoryTest extends AbstractTestcontainersUnitTest
 	
 	}
 
-//	@Test
-//	void test() {
-//		fail("Not yet implemented");
-//	}
+	@Test
+	void canUploadCustomerPhoto()
+	{
+		String email =faker.internet().safeEmailAddress()+"-"+UUID.randomUUID();
+		Customer customer = new Customer(
+		20,
+		faker.name().fullName(),
+		email,
+		"password", faker.demographic().sex()
+		);
+
+		underTest.save(customer);
+
+		Integer id = underTest
+				.findAll()
+				.stream()
+				.filter(c->c.getEmail().matches(email))
+				.map(c->c.getId())
+				.findFirst()
+				.orElseThrow(); 
+		
+		int worked=underTest.updateImageId("2222", id);
+
+		Optional<Customer> optionalCustomer=underTest.findById(id);
+
+		assertThat(optionalCustomer)
+		.isPresent()
+		.hasValueSatisfying((c)-> 
+		assertThat(c.getImage_id()).isEqualTo("2222"));
+
+	}
 }
