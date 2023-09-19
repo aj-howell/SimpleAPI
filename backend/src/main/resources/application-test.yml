@@ -6,6 +6,6 @@ aws:
       customer: fullstack-ahowell-customer-test
 spring:
   datasource:
-    url: jdbc:postgresql://awseb-e-mfgjkmkeev-stack-awsebrdsdatabase-wbgpjck8hzdx.cb6ndl9gkegq.us-east-1.rds.amazonaws.com:5432/ebdb
-    username: amigoscode
-    password: password
+    url: jdbc-secretsmanager:postgresql://awseb-e-mfgjkmkeev-stack-awsebrdsdatabase-wbgpjck8hzdx.cb6ndl9gkegq.us-east-1.rds.amazonaws.com:5432/ebdb
+    username: test/full-stack/postgres
+    driver-class-name: com.amazonaws.secretsmanager.sql.AWSSecretsManagerPostgreSQLDriver
