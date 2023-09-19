@@ -71,7 +71,7 @@ public class CustomerController
 	)
     public void uploadPhoto(@PathVariable("customerId") Integer customerId, @RequestParam("file") MultipartFile file)
     {
-		customerService.uploadCustomerPhoto(customerId,file);
+		  customerService.uploadCustomerPhoto(customerId,file);
     }
 
 	

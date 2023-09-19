@@ -4,7 +4,6 @@ aws:
     mock: false
     buckets:
       customer: fullstack-ahowell-customer-test
-
 spring:
   datasource:
     url: jdbc:postgresql://awseb-e-mfgjkmkeev-stack-awsebrdsdatabase-wbgpjck8hzdx.cb6ndl9gkegq.us-east-1.rds.amazonaws.com:5432/ebdb

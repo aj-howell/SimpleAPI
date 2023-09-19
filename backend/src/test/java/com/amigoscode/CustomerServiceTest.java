@@ -388,7 +388,7 @@ class CustomerServiceTest {
 			byte[] expected = "image".getBytes();
 
 			when(s3Bucket.getCustomer()).thenReturn(bucket);
-			
+	
 			when(s3Service.getObject("profile/image/customer/"+id+"/"+customer.getImage_id(), bucket)).thenReturn("image".getBytes());
 
 			byte[] actualImage=underTest.downloadCustomerPhoto(20);
