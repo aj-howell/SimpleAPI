@@ -13,6 +13,7 @@ public class CustomerDTO
 	public List<String> roles;
 	public Integer age;
 	public Integer id;
+	public String image_id;
 	
 	 public CustomerDTO() {
 	    }
@@ -22,6 +23,7 @@ public class CustomerDTO
 		this.name=c.getName();
 		this.email=c.getEmail();
 		this.gender=c.getGender();
+		this.image_id=c.getImage_id();
 		this.age=c.getAge();
 		this.id=c.getId();
 		this.roles= new ArrayList<String>();

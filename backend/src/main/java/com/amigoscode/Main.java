@@ -10,9 +10,13 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.amigoscode.S3.S3Service;
 import com.amigoscode.customer.Customer;
 import com.amigoscode.customer.CustomerRepository;
 import com.github.javafaker.Faker;
+
+import software.amazon.awssdk.services.s3.S3Client;
 
 @SpringBootApplication // Configures and finds packages & paths 
 public class Main
@@ -29,22 +33,22 @@ public class Main
 	{
 		
 		return args ->{
-			var fake = new Faker();
-			Random ran= new Random();
-			String Fname = fake.name().firstName();
-			String Lname = fake.name().lastName();
-			String email = Fname+"."+Lname+"@gmail.com";
+			 var fake = new Faker();
+			 Random ran= new Random();
+			 String Fname = fake.name().firstName();
+			 String Lname = fake.name().lastName();
+			 String email = Fname+"."+Lname+"@gmail.com";
 			
-			Customer customer = new Customer
-					(
-						ran.nextInt(16, 99),
-						Fname+" "+Lname,
-						email,
-						passwordEncoder.encode(UUID.randomUUID().toString()),
-						fake.demographic().sex()
-					);			
+			 Customer customer = new Customer
+			 		(
+			 			ran.nextInt(16, 99),
+			 			Fname+" "+Lname,
+			 			email,
+			 			passwordEncoder.encode(UUID.randomUUID().toString()),
+			 			fake.demographic().sex()
+			 		);			
 			
-			customerRepository.save(customer);
+			 customerRepository.save(customer);
 		};
 		
 	}

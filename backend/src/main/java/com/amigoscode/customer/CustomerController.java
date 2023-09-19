@@ -3,6 +3,7 @@ package com.amigoscode.customer;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.amigoscode.JWT.JWTUtil;
 
 @RestController
@@ -27,7 +31,6 @@ public class CustomerController
 	public CustomerController(CustomerService customerService,JWTUtil jwtUtil) {
 		this.customerService = customerService;
 		this.jwtUtil = jwtUtil;
-		
 	}
 
 	@GetMapping //get is less specified(still need path string) & Request More direct path
@@ -68,14 +71,15 @@ public class CustomerController
 	@PostMapping( value="{customerId}/profile-image",
 	consumes = MediaType.MULTIPART_FORM_DATA_VALUE
 	)
-    public void uploadPhoto(@PathVariable Integer customerId, @RequestParam("file") MultipartFile file)
+    public void uploadPhoto(@PathVariable("customerId") Integer customerId, @RequestParam("file") MultipartFile file)
     {
-		customerService.uploadCustomerPhoto(customerId,file);
+		  customerService.uploadCustomerPhoto(customerId,file);
     }
 
 	
-	@GetMapping("{customerId}/profile-image")
-    public byte[] downloadPhoto(@PathVariable Integer customerId)
+	@GetMapping(value="{customerId}/profile-image",
+	produces = MediaType.IMAGE_JPEG_VALUE)
+    public byte[] downloadPhoto(@PathVariable("customerId") Integer customerId)
     {
 		return customerService.downloadCustomerPhoto(customerId);
     }

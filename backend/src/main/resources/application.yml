@@ -12,8 +12,9 @@ cors:
 aws:
   region: us-east-1
   s3:
+    mock: true
     buckets:
-        customer: fullstack-ahowell-customer-test
+      customer: fullstack-ahowell-customer-test
 
 management:
   endpoints:

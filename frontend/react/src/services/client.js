@@ -79,6 +79,26 @@ export const login = async(UsernameAndPassword)=>
 	}
 }
 
+export const updateImage= async(id, formData)=>
+{
+	try {
+		return axios.post(`${VITE_API_BASE_URL}/api/v1/customers/${id}/profile-image`,formData, 
+		{
+			...getAuthConfig(),
+			'Content-Type' : 'multipart/form-data'
+		});
+	} 
+	catch (err) {
+		throw err;
+	}
+}
+
+export const downloadImageURL = (id) => {
+
+	 return  `${VITE_API_BASE_URL}/api/v1/customers/${id}/profile-image`;
+	
+  }
+
 export const getAuthConfig = ()=>
 ({headers:
 {

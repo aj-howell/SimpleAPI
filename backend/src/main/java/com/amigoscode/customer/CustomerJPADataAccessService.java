@@ -73,6 +73,11 @@ public class CustomerJPADataAccessService implements CustomerDAO
 		return customerRepository.findCustomerByEmail(email);
 	}
 
+	@Override
+	public void uploadCustomerImageID(String ImageId, Integer customerID) {
+		customerRepository.updateImageId(ImageId, customerID);
+	}
+
 	
 
 

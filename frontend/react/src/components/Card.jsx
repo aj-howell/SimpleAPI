@@ -1,33 +1,33 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import {
-    Heading,
-    Avatar,
-    Box,
-    Center,
-    Image,
-    Flex,
-    Text,
-    Stack,
-    Tag,
-    useColorModeValue,
-    Button,
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
-    AlertDialogOverlay,
-    useDisclosure,
-    Drawer,
-  	DrawerBody,
-  	DrawerFooter,
-  	DrawerHeader,
-  	DrawerOverlay,
-  	DrawerContent,
-  	DrawerCloseButton
+	AlertDialog,
+	AlertDialogBody,
+	AlertDialogContent,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogOverlay,
+	Avatar,
+	Box,
+	Button,
+	Center,
+	Drawer,
+	DrawerBody,
+	DrawerCloseButton,
+	DrawerContent,
+	DrawerFooter,
+	DrawerHeader,
+	DrawerOverlay,
+	Flex,
+	Heading,
+	Image,
+	Stack,
+	Tag,
+	Text,
+	useColorModeValue,
+	useDisclosure
 } from '@chakra-ui/react';
 import React from 'react';
-import { deleteCustomer } from '../services/client';
+import { deleteCustomer, downloadImageURL } from '../services/client';
 import { errorNotification, successNotification } from '../services/notifcation';
 import UpdateCustomerForm from './UpdateCustomerForm';
 
@@ -69,7 +69,7 @@ export default function CardWithImage({id, name, email, age, gender, fetchCustom
                     <Avatar
                         size={'xl'}
                         src={
-                            `https://randomuser.me/api/portraits/${rand_gender}/${age}.jpg`
+                            downloadImageURL(id)
                         }
                         alt={'Author'}
                         css={{

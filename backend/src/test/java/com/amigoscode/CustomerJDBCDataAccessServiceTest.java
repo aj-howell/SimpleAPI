@@ -42,7 +42,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 		
 		List<Customer> Ecustomers=underTest.SelectAllCustomers();
 		
-		assertThat(Ecustomers).isNotEmpty();
+		assertThat(Ecustomers.size()).isLessThanOrEqualTo(50);
 	}
 	
 	@Test
@@ -66,11 +66,12 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 						);
 		
 		underTest.insertCustomer(customer);
-		
+
+
 		int id=underTest.SelectAllCustomers()
 		.stream()
 		.filter(c -> c.getEmail().matches(email))
-		.map(c -> c.getId())
+		.map(c -> c.getId().intValue())
 		.findFirst()
 		.orElseThrow();
 		//check where the customer exist by email the grab the id
@@ -83,7 +84,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 			assertThat(c.getEmail().equals(email));
 			assertThat(c.getGender().equals(customer.getGender()));
 			assertThat(c.getName().equals(customer.getName()));
-			
+			assertThat(c.getPassword().equals(customer.getPassword()));
 		});
 		
 	}
@@ -356,7 +357,8 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        		 20,
 	                faker.name().fullName(),
 	                email,
-	                "password", gender
+	                "password",
+					gender
 	        );
 
 	        underTest.insertCustomer(customer);
@@ -373,6 +375,7 @@ class CustomerJDBCDataAccessServiceTest extends AbstractTestcontainersUnitTest
 	        update.setId(id);
 	        update.setName("foo");
 	        update.setEmail(UUID.randomUUID().toString());
+			update.setPassword("password");
 	        update.setAge(22);
 	        update.setGender(gender);
 
